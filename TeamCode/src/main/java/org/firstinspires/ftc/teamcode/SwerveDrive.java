@@ -165,4 +165,7 @@ public class SwerveDrive extends Thread {
         this.autoRotate = autoRotate;
         this.notify();
     }
+    public void update(Gamepad gamepad1){
+        this.gamepad1 = gamepad1;
+    }
     }
