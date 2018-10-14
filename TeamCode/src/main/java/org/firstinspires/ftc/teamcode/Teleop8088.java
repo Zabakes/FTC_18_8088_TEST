@@ -69,11 +69,15 @@ public class Teleop8088 extends OpMode {
 
     @Override
     public void loop() {
-
+        Swerve.interrupt();
+        Swerve.update(gamepad1);
+        Swerve.notify();
     }
     @Override
     public void stop() {
+
         Swerve.DriverControl(false);
+
     }
 
 }
