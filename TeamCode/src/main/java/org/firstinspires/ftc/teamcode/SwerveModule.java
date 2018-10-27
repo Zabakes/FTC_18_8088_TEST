@@ -11,7 +11,7 @@ public class SwerveModule{
 
     wheels numbered
         1-------2
-        |       |
+        |       |-> 0 degrees when wheels facing right
         |       |
         4-------3
 
@@ -20,11 +20,11 @@ public class SwerveModule{
     private DcMotor driveMotor;
     private Servo turningMotor;
     private double turnigGearRatio = 23.00/30.00;
-    private double maxServoTravelDegrees = 270;
+    private double maxServoTravelDegrees = 3/2*Math.PI;
     private double motorDirection;
     private int defaultMotorDirection;
     private int servoCenterOffset;
-    private double angle;
+    private double currentAngle;
 
 
     public SwerveModule(DcMotor driveMotor, Servo turningMotor, int servoCenterOffset, int defaultMotorDirection){
@@ -38,24 +38,24 @@ public class SwerveModule{
         motorDirection = defaultMotorDirection;
 
         while(angle < 0 ){
-            angle += 360;
+            angle += 2*Math.PI;
         }
 
-        while (angle > ((maxServoTravelDegrees)*turnigGearRatio) || angle > 360) {
-            if(angle >= 180) {
+        while (angle > ((maxServoTravelDegrees)*turnigGearRatio) || angle > 2*Math.PI) {
+            if(angle >= Math.PI) {
                 motorDirection *= -1;
-                angle -= 180;
+                angle -= Math.PI;
             }else{
                 angle = ((maxServoTravelDegrees)*turnigGearRatio);
             }
         }
 
-        this.angle = angle;
-        turningMotor.setPosition((((angle+servoCenterOffset)-(maxServoTravelDegrees/2))/turnigGearRatio)/360);
+        currentAngle = angle;
+        turningMotor.setPosition((((angle+servoCenterOffset)-(maxServoTravelDegrees/2))/turnigGearRatio)/2*Math.PI);
     }
 
     public double getAngle() {
-        return angle;
+        return currentAngle;
     }
 
     public void Go(double speed){
