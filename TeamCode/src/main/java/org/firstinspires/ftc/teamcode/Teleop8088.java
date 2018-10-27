@@ -4,28 +4,27 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
-
 @TeleOp(name="Teleop8088", group="Iterative Opmode")
+
 public class Teleop8088 extends OpMode {
 
-    static final int FRONTLEFT = 0;
-    static final int FRONTRIGHT = 1;
-    static final int BACKRIGHT = 2;
-    static final int BACKLEFT = 3;
+    static final int FRONT_LEFT = 3;
+    static final int FRONT_RIGHT = 0;
+    static final int BACK_RIGHT = 1;
+    static final int BACK_LEFT = 2;
                 /*
-               wheels numbered
-                   1-------2
+               wheels numbered with front being navX +x
+                   4-------1
                    |       |
                    |       |
-                   4-------3
+                   3-------2
                 */
 
-    SwerveDrive Swerve;
+    private SwerveDrive Swerve;
     private ElapsedTime runtime = new ElapsedTime();
 
     @Override
@@ -37,15 +36,15 @@ public class Teleop8088 extends OpMode {
         Servo[] swerveServo = new Servo[4];
         DcMotor[] swerveMotor = new DcMotor[4];
 
-        swerveMotor[FRONTLEFT] = hardwareMap.get(DcMotor.class, "Front Left Motor");
-        swerveMotor[FRONTRIGHT] = hardwareMap.get(DcMotor.class, "Front Right Motor");
-        swerveMotor[BACKRIGHT] = hardwareMap.get(DcMotor.class, "Back Right Motor");
-        swerveMotor[BACKLEFT] = hardwareMap.get(DcMotor.class, "Back Left Motor");
+        swerveMotor[FRONT_LEFT] = hardwareMap.get(DcMotor.class, "Front Left Motor");
+        swerveMotor[FRONT_RIGHT] = hardwareMap.get(DcMotor.class, "Front Right Motor");
+        swerveMotor[BACK_RIGHT] = hardwareMap.get(DcMotor.class, "Back Right Motor");
+        swerveMotor[BACK_LEFT] = hardwareMap.get(DcMotor.class, "Back Left Motor");
 
-        swerveServo[FRONTLEFT] = hardwareMap.get(Servo.class, "Front Left Servo");
-        swerveServo[FRONTRIGHT] = hardwareMap.get(Servo.class, "Front Right Servo");
-        swerveServo[BACKRIGHT] = hardwareMap.get(Servo.class, "Back Right Servo");
-        swerveServo[BACKLEFT] = hardwareMap.get(Servo.class, "Back Left Servo");
+        swerveServo[FRONT_LEFT] = hardwareMap.get(Servo.class, "Front Left Servo");
+        swerveServo[FRONT_RIGHT] = hardwareMap.get(Servo.class, "Front Right Servo");
+        swerveServo[BACK_RIGHT] = hardwareMap.get(Servo.class, "Back Right Servo");
+        swerveServo[BACK_LEFT] = hardwareMap.get(Servo.class, "Back Left Servo");
 
         for(int i = 0; i < swerveModules.length; i++){
             swerveModules[i] = new SwerveModule(swerveMotor[i], swerveServo[i],0 ,1);
@@ -53,9 +52,7 @@ public class Teleop8088 extends OpMode {
 
         /*TODO add servo offsets and default motor direction to swerve modules*/
 
-        Swerve = new SwerveDrive(swerveModules, gamepad1);
-
-        Swerve.start();
+        Swerve = new SwerveDrive(swerveModules);
 
         //swerve drive initialization
 
@@ -64,20 +61,14 @@ public class Teleop8088 extends OpMode {
     @Override
     public void start() {
         runtime.reset();
-        Swerve.DriverControl(true);
     }
 
     @Override
     public void loop() {
-        Swerve.interrupt();
-        Swerve.update(gamepad1);
-        Swerve.notify();
+        Swerve.run(gamepad1);
     }
     @Override
     public void stop() {
-
-        Swerve.DriverControl(false);
-
     }
 
 }

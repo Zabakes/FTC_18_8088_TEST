@@ -1,17 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
-import static org.firstinspires.ftc.teamcode.Teleop8088.BACKLEFT;
-import static org.firstinspires.ftc.teamcode.Teleop8088.BACKRIGHT;
-import static org.firstinspires.ftc.teamcode.Teleop8088.FRONTLEFT;
-import static org.firstinspires.ftc.teamcode.Teleop8088.FRONTRIGHT;
 
 /*
 wheels numbered
@@ -23,149 +18,72 @@ wheels numbered
 
 
 
-public class SwerveDrive extends Thread {
+public class SwerveDrive{
     public SwerveModule swerveModules[];
     private double angle;
     private double speed;
-    private Gamepad gamepad1;
-    private boolean isDiverControlled = false;
-    private boolean isAuto = false;
     private NavxMicroNavigationSensor navx = null;
-    private double autoStrafe;
-    private double autoFwd;
-    private double autoRotate;
 
 
 
-    public SwerveDrive(SwerveModule[] swerveModules, Gamepad gamepad1) {
+    public SwerveDrive(SwerveModule[] swerveModules) {
         this.swerveModules = swerveModules;
-        this.gamepad1 = gamepad1;
     }
 
-    public SwerveDrive(SwerveModule[] swerveModules, Gamepad gamepad1, NavxMicroNavigationSensor navx) {
+    public SwerveDrive(SwerveModule[] swerveModules, NavxMicroNavigationSensor navx) {
         this.swerveModules = swerveModules;
-        this.gamepad1 = gamepad1;
         this.navx = navx;
     }
 
-    public void Run() {
-        while (true) {
-            double STR = 0;
-            double FWD = 0;
-            double RCW = 0;
-            double temp;
-            if(isDiverControlled) {
+    public void run(Gamepad gamepad1){
+
+            double STR;
+            double FWD;
+            double RCW;
+
                  STR = gamepad1.left_stick_x;
-                 FWD = -gamepad1.left_stick_y;
+                 FWD = gamepad1.left_stick_y;
                  RCW = gamepad1.right_stick_x;
 
-            }else{
-                if(isAuto) {
-                    STR = autoStrafe;
-                    FWD = autoFwd;
-                    RCW = autoRotate;
-                }
-            }
-
-            double[] speed = new double[swerveModules.length];
-            double[] angle = new double[swerveModules.length];
-
+            double rotateAngle = 45;
 
             if(navx != null) {
-                temp = (FWD * Math.cos(navx.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle))
-                        + (STR * Math.sin(navx.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle));
-                STR = (FWD * Math.sin(navx.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle))
-                        + (STR * Math.cos(navx.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle));
-                FWD = temp;
+                rotateAngle += navx.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
             }
 
-
-            double a = STR - RCW;
-            double b = STR + RCW;
-            double c = FWD - RCW;
-            double d = FWD + RCW;
-
-            speed[FRONTLEFT] = Math.sqrt ((b * b) + (c * c));
-            speed[FRONTRIGHT] = Math.sqrt ((b * b) + (d * d));
-            speed[BACKRIGHT] = Math.sqrt ((a * a) + (d * d));
-            speed[BACKLEFT] = Math.sqrt ((a * a) + (c * c));
-
-            angle[FRONTLEFT] = Math.atan2 (b, c) / Math.PI;
-            angle[FRONTRIGHT] = Math.atan2 (b, d) / Math.PI;
-            angle[BACKRIGHT] = Math.atan2 (a, d) / Math.PI;
-            angle[BACKLEFT] = Math.atan2 (a, c) / Math.PI;
-
-            // write the speed and angles to all 4 modules
+            // write the speed and angles to all modules
             for(int i = 0; i < swerveModules.length; i++){
-                swerveModules[i].Go(speed[i]);
-                swerveModules[i].setWheelPosition(angle[i]*180);
+
+                rotateAngle += (360/swerveModules.length)*i;
+
+                double xComponent = Math.sin(Math.toDegrees(rotateAngle))*RCW+STR;
+                double yComponent = Math.cos(Math.toDegrees((rotateAngle)))*RCW+FWD;
+
+                swerveModules[i].setWheelPosition(Math.toDegrees(Math.atan2(yComponent, xComponent)));
+                swerveModules[i].Go((Math.sqrt(Math.pow(yComponent, 2)+Math.pow(xComponent, 2))/2));
+
             }
         }
-    }
 
         public void setAngle(double angle){
-        try{
-          this.wait(10);
-        }catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        this.angle = angle;
-        this.notify();
+            this.angle = angle;
         }
 
         public void setSpeed(double speed){
-        try{
-            this.wait(10);
-        }catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        this.speed = speed;
-        this.notify();
-    }
-
-        public void DriverControl(boolean isDiverControlled){
-            try{
-                this.wait(10);
-            }catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            this.isDiverControlled = isDiverControlled;
-            this.notify();
+            this.speed = speed;
         }
 
         public double getAngle (){
             return angle;
         }
 
-    public void setAutoStrafe(double autoStrafe) {
-        try{
-            this.wait(10);
-        }catch (InterruptedException e) {
-            e.printStackTrace();
+        public void auto(float autoStrafe, float autoFwd, float autoRotate) {
+            Gamepad autoPlaceHolder = new Gamepad();
+            autoPlaceHolder.right_stick_x = autoRotate;
+            autoPlaceHolder.left_stick_x = autoStrafe;
+            autoPlaceHolder.left_stick_y = autoFwd;
+            run(autoPlaceHolder);
         }
-        this.autoStrafe = autoStrafe;
-    }
 
-    public void setAutoFwd(double autoFwd) {
-        try{
-            this.wait(10);
-        }catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        this.autoFwd = autoFwd;
-        this.notify();
-    }
 
-    public void setAutoRotate(double autoRotate) {
-        try{
-            this.wait(10);
-        }catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        this.autoRotate = autoRotate;
-        this.notify();
-    }
-    public void update(Gamepad gamepad1){
-        this.gamepad1 = gamepad1;
-    }
     }
