@@ -1,3 +1,4 @@
+<<<<<<< refs/remotes/ftctechnh/master
 ## NOTICE
 
 This repository contains v5.0 of the FTC SDK.  No further versions will pushed to https://github.com/ftctechnh/ftc_app.
@@ -8,11 +9,20 @@ Why are we doing this?  Git/GitHub is not designed to store large binary blobs. 
 
 ## Welcome!
 This GitHub repository contains the source code that is used to build an Android app to control a *FIRST* Tech Challenge competition robot.  To use this SDK, download/clone the entire project to your local computer.
+=======
+﻿
+    The servo center offset is how far from right the servo's zero is
+    The default motor direction is positive or negative one depending on which direction the motor turns so the robot goes right while servo is at zero with the offset applied
+>>>>>>> added navx support and new encoder thread method
 
-If you are new to the *FIRST* Tech Challenge software and control system, you should visit the online wiki to learn how to install, configure, and use the software and control system:
+    wheels numbered
+        1-------2
+        |       |-> 0 degrees when wheels facing right
+        |       |(can be adjusted with servoCenterOffset and defaultMotorDirection)
+        4-------3
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;https://github.com/ftctechnh/ftc_app/wiki
 
+<<<<<<< refs/remotes/ftctechnh/master
 Note that the wiki is an "evergreen" document that is constantly being updated and edited.  It contains the most current information about the *FIRST* Tech Challenge software and control system.
 
 ## Downloading the Project
@@ -793,3 +803,6 @@ In this latest version of the FTC SDK (20150803_001) the following changes shoul
 
 T. Eng
 August 3, 2015
+=======
+	
+>>>>>>> added navx support and new encoder thread method
