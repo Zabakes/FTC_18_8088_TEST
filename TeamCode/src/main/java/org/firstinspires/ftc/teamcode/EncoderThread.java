@@ -1,14 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.google.gson.internal.bind.MapTypeAdapterFactory;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class EncoderThread implements Runnable {
 
     DcMotor motor;
 
-    private int targetposition;
-    int power;
-    boolean hasrun;
+    private double targetPosition;
+    private double power;
+    private double radius;
 
     public EncoderThread(DcMotor motor){
         this.motor = motor;
@@ -25,10 +26,10 @@ public class EncoderThread implements Runnable {
         DcMotor.RunMode mode = motor.getMode();
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        motor.setTargetPosition(targetposition);
+        motor.setTargetPosition((int) Math.round(targetPosition));
         motor.setPower(power);
 
-        while(motor.isBusy() && System.currentTimeMillis() < t+Math.abs(targetposition - initalpos)*1*power){
+        while(motor.isBusy() && System.currentTimeMillis() < t+Math.abs(targetPosition - initalpos)*1*power){
 
         }
 
@@ -37,8 +38,8 @@ public class EncoderThread implements Runnable {
 
         }
 
-    public void setTargetposition(int targetposition) {
-        this.targetposition = targetposition;
+    public void setTargetposition(int targetPosition) {
+        this.targetPosition = targetPosition;
     }
 
 
@@ -48,7 +49,19 @@ public class EncoderThread implements Runnable {
 
     public void runToPosition(int power, int targetposition){
         this.power = power;
-        this.targetposition = targetposition;
+        this.targetPosition = targetposition;
+        this.run();
+    }
+
+    public void runToPosLinear(double power, double targetPosition, double radius){
+        this.power = power;
+        this.targetPosition = targetPosition*2*Math.PI*radius;
+        this.run();
+    }
+
+    public void runToPosLinear(double power, double targetPosition){
+        this.power = power;
+        this.targetPosition = targetPosition*2*Math.PI*radius;
         this.run();
     }
 
