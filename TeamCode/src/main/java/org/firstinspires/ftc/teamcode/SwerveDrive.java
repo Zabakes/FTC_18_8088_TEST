@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
@@ -25,6 +26,7 @@ public class SwerveDrive{
     private double angle;
     private double speed;
     private NavxMicroNavigationSensor navx = null;
+    private BNO055IMU imu = null;
 
     public SwerveDrive(SwerveModule[] swerveModules) {
         this.swerveModules = swerveModules;
@@ -35,10 +37,15 @@ public class SwerveDrive{
         this.navx = navx;
     }
 
+    public SwerveDrive(SwerveModule[] swerveModules, BNO055IMU imu) {
+        this.swerveModules = swerveModules;
+        this.imu = imu;
+    }
+
     public void run(Gamepad gamepad1){
 
             double STR = gamepad1.left_stick_x;
-            double FWD = gamepad1.left_stick_y;
+            double FWD = -gamepad1.left_stick_y;
             double RCW = gamepad1.right_stick_x;
 
             double firstModuleAngle = 45;
@@ -47,7 +54,9 @@ public class SwerveDrive{
             double navxOffset = 0;
 
             if(navx != null) {
-                navxOffset += navx.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+                navxOffset += navx.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
+            }else if(imu != null) {
+            navxOffset += imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
             }
 
             // write the speed and angles to all modules
