@@ -8,11 +8,9 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name="Teleop8088", group="Iterative Opmode")
+@TeleOp(name="Teleop8088TEST", group="Iterative Opmode")
 
 public class Teleop8088 extends OpMode {
-
-
 
     private SwerveDrive Swerve;
     private ElapsedTime runtime = new ElapsedTime();
@@ -35,8 +33,7 @@ public class Teleop8088 extends OpMode {
     }
 
     private void swerveInit(){
-
-           /*
+        /*
     The servo center offset is how far from right the servo's zero is
     The default motor direction is positive or negative one depending on which direction the motor turns so the robot goes right while servo is at zero with the offset applied
 
