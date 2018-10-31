@@ -7,24 +7,24 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
+    /*
+    The servo center offset is how far from right the servo's zero is
+    The default motor direction is positive or negative one depending on which direction the motor turns so the robot goes right while servo is at zero with the offset applied
 
-/*
-wheels numbered
-    1-------2
-    |       |
-    |       |
-    4-------3
- */
+    wheels numbered
+        1-------2
+        |       |-> 0 degrees when wheels facing right
+        |       |(can be adjusted with servoCenterOffset and defaultMotorDirection)
+        4-------3
 
-
+    */
 
 public class SwerveDrive{
+
     public SwerveModule swerveModules[];
     private double angle;
     private double speed;
     private NavxMicroNavigationSensor navx = null;
-
-
 
     public SwerveDrive(SwerveModule[] swerveModules) {
         this.swerveModules = swerveModules;
@@ -37,27 +37,26 @@ public class SwerveDrive{
 
     public void run(Gamepad gamepad1){
 
-            double STR;
-            double FWD;
-            double RCW;
+            double STR = gamepad1.left_stick_x;
+            double FWD = gamepad1.left_stick_y;
+            double RCW = gamepad1.right_stick_x;
 
-                 STR = gamepad1.left_stick_x;
-                 FWD = gamepad1.left_stick_y;
-                 RCW = gamepad1.right_stick_x;
-
-            double rotateAngle = 45;
+            double firstModuleAngle = 45;
+            double joystickMagnitude = Math.sqrt(Math.pow(STR,2)+Math.pow(FWD , 2));
+            double joystickAngle = Math.atan2(FWD, STR);
+            double navxOffset = 0;
 
             if(navx != null) {
-                rotateAngle += navx.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+                navxOffset += navx.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
             }
 
             // write the speed and angles to all modules
             for(int i = 0; i < swerveModules.length; i++){
 
-                rotateAngle += (360/swerveModules.length)*i;
+                firstModuleAngle += (360/swerveModules.length)*i;
 
-                double xComponent = Math.sin(Math.toDegrees(rotateAngle))*RCW+STR;
-                double yComponent = Math.cos(Math.toDegrees((rotateAngle)))*RCW+FWD;
+                double xComponent = Math.sin(Math.toRadians(firstModuleAngle))*RCW+Math.cos(joystickAngle-navxOffset)*joystickMagnitude;
+                double yComponent = Math.cos(Math.toRadians((firstModuleAngle)))*RCW+Math.sin(joystickAngle-navxOffset)*joystickMagnitude;
 
                 swerveModules[i].setWheelPosition(Math.toDegrees(Math.atan2(yComponent, xComponent)));
                 swerveModules[i].Go((Math.sqrt(Math.pow(yComponent, 2)+Math.pow(xComponent, 2))/2));
@@ -65,11 +64,11 @@ public class SwerveDrive{
             }
         }
 
-        public void setAngle(double angle){
+        public void setUniversalAngle(double angle){
             this.angle = angle;
         }
 
-        public void setSpeed(double speed){
+        public void setUniversalSpeed(double speed){
             this.speed = speed;
         }
 
@@ -84,6 +83,5 @@ public class SwerveDrive{
             autoPlaceHolder.left_stick_y = autoFwd;
             run(autoPlaceHolder);
         }
-
 
     }
