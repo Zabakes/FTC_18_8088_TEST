@@ -7,7 +7,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
-    /*
+/*
     The servo center offset is how far from right the servo's zero is
     The default motor direction is positive or negative one depending on which direction the motor turns so the robot goes right while servo is at zero with the offset applied
 
@@ -17,11 +17,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
         |       |(can be adjusted with servoCenterOffset and defaultMotorDirection)
         4-------3
 
-    */
+*/
 
 public class SwerveDrive{
 
-    public SwerveModule swerveModules[];
+    public SwerveModule[] swerveModules;
     private double angle;
     private double speed;
     private NavxMicroNavigationSensor navx = null;
