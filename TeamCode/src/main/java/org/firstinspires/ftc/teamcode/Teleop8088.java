@@ -12,25 +12,45 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class Teleop8088 extends OpMode {
 
-    static final int FRONT_LEFT = 3;
-    static final int FRONT_RIGHT = 0;
-    static final int BACK_RIGHT = 1;
-    static final int BACK_LEFT = 2;
-                /*
-               wheels numbered with front being navX +x
-                   4-------1
-                   |       |
-                   |       |
-                   3-------2
-                */
+
 
     private SwerveDrive Swerve;
     private ElapsedTime runtime = new ElapsedTime();
 
     @Override
     public void init() {
+        swerveInit();
+    }
+    @Override
+    public void start() {
+        runtime.reset();
+    }
 
-        //swerve drive initialization
+    @Override
+    public void loop() {
+        Swerve.run(gamepad1);
+    }
+    @Override
+    public void stop() {
+    }
+
+    private void swerveInit(){
+
+           /*
+    The servo center offset is how far from right the servo's zero is
+    The default motor direction is positive or negative one depending on which direction the motor turns so the robot goes right while servo is at zero with the offset applied
+
+    wheels numbered
+        1-------2
+        |       |-> 0 degrees when wheels facing right
+        |       |(can be adjusted with servoCenterOffset and defaultMotorDirection)
+        4-------3
+
+    */
+        final int FRONT_LEFT = 3;
+        final int FRONT_RIGHT = 0;
+        final int BACK_RIGHT = 1;
+        final int BACK_LEFT = 2;
 
         SwerveModule[] swerveModules = new SwerveModule[4];
         Servo[] swerveServo = new Servo[4];
@@ -53,22 +73,6 @@ public class Teleop8088 extends OpMode {
         /*TODO add servo offsets and default motor direction to swerve modules*/
 
         Swerve = new SwerveDrive(swerveModules);
-
-        //swerve drive initialization
-
-
-    }
-    @Override
-    public void start() {
-        runtime.reset();
-    }
-
-    @Override
-    public void loop() {
-        Swerve.run(gamepad1);
-    }
-    @Override
-    public void stop() {
     }
 
 }
