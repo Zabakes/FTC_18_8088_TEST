@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -13,11 +14,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class Teleop8088 extends OpMode {
 
     private SwerveDrive Swerve;
+    BNO055IMU imu;
     private ElapsedTime runtime = new ElapsedTime();
 
     @Override
     public void init() {
-        swerveInit();
+        //imuInit();
+        //swerveInit();
     }
     @Override
     public void start() {
@@ -69,7 +72,38 @@ public class Teleop8088 extends OpMode {
 
         /*TODO add servo offsets and default motor direction to swerve modules*/
 
-        Swerve = new SwerveDrive(swerveModules);
+        Swerve = new SwerveDrive(swerveModules, imu);
+    }
+
+    private void imuInit(){
+
+        telemetry.addData("Mode", "waiting for start");
+        telemetry.addData("imu calib status", imu.getCalibrationStatus().toString());
+        telemetry.update();
+
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+
+        parameters.mode                = BNO055IMU.SensorMode.IMU;
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.loggingEnabled      = false;
+
+        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
+        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
+        // and named "imu".
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+
+        imu.initialize(parameters);
+
+        telemetry.addData("Mode", "calibrating...");
+        telemetry.update();
+
+        // make sure the imu gyro is calibrated before continuing.
+        while (!imu.isGyroCalibrated()) {
+
+        }
+
+
     }
 
 }
