@@ -9,6 +9,7 @@ public class EncoderThread implements Runnable {
 
     private double targetPosition;
     private double power;
+    public static final double TICKS_PER_REV = 1000;//TODO
     private double radius;
 
     public EncoderThread(DcMotor motor){
@@ -61,9 +62,15 @@ public class EncoderThread implements Runnable {
 
     public void runToPosLinear(double power, double targetPosition){
         this.power = power;
-        this.targetPosition = targetPosition*2*Math.PI*radius;
+        this.targetPosition = (targetPosition/TICKS_PER_REV)*(2*Math.PI*radius);
         this.run();
     }
 
+    public double getLinearPos(){
+        return (motor.getCurrentPosition()/TICKS_PER_REV)*(2*Math.PI*radius);
+    }
 
+    public void setRadius(double radius) {
+        this.radius = radius;
+    }
 }
