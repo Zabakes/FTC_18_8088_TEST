@@ -2,12 +2,13 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-public class EncoderThread extends Thread {
+public class EncoderThread implements Runnable {
 
     DcMotor motor;
 
-    int position;
+    private int targetposition;
     int power;
+    boolean hasrun;
 
     public EncoderThread(DcMotor motor){
         this.motor = motor;
@@ -24,10 +25,10 @@ public class EncoderThread extends Thread {
         DcMotor.RunMode mode = motor.getMode();
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        motor.setTargetPosition(position);
+        motor.setTargetPosition(targetposition);
         motor.setPower(power);
 
-        while(motor.isBusy() && System.currentTimeMillis() < t+Math.abs(position - initalpos)*1*power){
+        while(motor.isBusy() && System.currentTimeMillis() < t+Math.abs(targetposition - initalpos)*1*power){
 
         }
 
@@ -36,13 +37,20 @@ public class EncoderThread extends Thread {
 
         }
 
-    public void setPosition(int position) {
-        this.position = position;
+    public void setTargetposition(int targetposition) {
+        this.targetposition = targetposition;
     }
 
 
     public void setPower(int power) {
         this.power = power;
     }
+
+    public void runToPosition(int power, int targetposition){
+        this.power = power;
+        this.targetposition = targetposition;
+        this.run();
+    }
+
 
 }
