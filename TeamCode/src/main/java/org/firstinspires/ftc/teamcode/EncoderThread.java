@@ -1,22 +1,23 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.google.gson.internal.bind.MapTypeAdapterFactory;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-public class EncoderThread{
+public class EncoderThread implements Runnable{
 
     DcMotor motor;
 
     private double targetPosition;
     private double power;
-    public static final double TICKS_PER_REV = 1000;//TODO
+    private double TICKS_PER_REV;
     private double radius;
 
-    public EncoderThread(DcMotor motor){
+    public EncoderThread(DcMotor motor, double gearReduction){
         this.motor = motor;
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        TICKS_PER_REV = 7*gearReduction;
     }
 
+    @Override
     public void run(){
 
         long t = System.currentTimeMillis();
@@ -50,19 +51,22 @@ public class EncoderThread{
     public void runToPosition(int power, int targetposition){
         this.power = power;
         this.targetPosition = targetposition;
-        this.run();
+        Thread t = new Thread(this);
+        t.start();
     }
 
     public void runToPosLinear(double power, double targetPosition, double radius){
         this.power = power;
         this.targetPosition = targetPosition*2*Math.PI*radius;
-        this.run();
+        Thread t = new Thread(this);
+        t.start();
     }
 
     public void runToPosLinear(double power, double targetPosition){
         this.power = power;
         this.targetPosition = (targetPosition/TICKS_PER_REV)*(2*Math.PI*radius);
-        this.run();
+        Thread t = new Thread(this);
+        t.start();
     }
 
     public double getLinearPos(){
