@@ -17,17 +17,13 @@ public class Teleop8088 extends OpMode {
     private SwerveDrive Swerve;
     BNO055IMU imu;
     private ElapsedTime runtime = new ElapsedTime();
-    private Chassis chassis;
-    private Intakearm arm;
-    public static Outake output;
+    private static MechThread[] mechs = new MechThread[]{new Chassis(),new Intakearm(),new Outake()};
 
     @Override
     public void init() {
-        //imuInit();
-        //swerveInit();
-        armInit();
-        chassisInit();
-        outakeinit();
+        for (MechThread m:mechs) {
+            m.init(hardwareMap);
+        }
     }
     @Override
     public void start() {
@@ -36,48 +32,16 @@ public class Teleop8088 extends OpMode {
 
     @Override
     public void loop() {
-        //Swerve.run(gamepad1);
-        chassis.run(gamepad1);
-        arm.run(gamepad1);
-        output.run(gamepad1);
+        for (MechThread m:mechs) {
+            m.updateAndStart(gamepad1);
+        }
     }
     @Override
     public void stop() {
     }
 
-    private void chassisInit(){
 
-        DcMotor[] motors = new DcMotor[4];
 
-        final int FRONT_LEFT = 3;
-        final int FRONT_RIGHT = 0;
-        final int BACK_RIGHT = 1;
-        final int BACK_LEFT = 2;
-
-        motors[FRONT_LEFT] = hardwareMap.get(DcMotor.class, "Front Left Motor");
-        motors[FRONT_RIGHT] = hardwareMap.get(DcMotor.class, "Front Right Motor");
-        motors[BACK_RIGHT] = hardwareMap.get(DcMotor.class, "Back Right Motor");
-        motors[BACK_LEFT] = hardwareMap.get(DcMotor.class, "Back Left Motor");
-
-        chassis = new Chassis(motors[FRONT_LEFT],motors[FRONT_RIGHT],motors[BACK_LEFT],motors[BACK_RIGHT]);
-    }
-
-    private void armInit(){
-        DcMotor intake = hardwareMap.get(DcMotor.class, "Intake Motor");
-        DcMotor piviot = hardwareMap.get(DcMotor.class, "Pivot Intake");
-
-        DigitalChannel upperLimit = hardwareMap.get(DigitalChannel.class, "Upper Limit Switch");
-        DigitalChannel lowerLimit = hardwareMap.get(DigitalChannel.class, "Lower Limit Switch");
-
-        arm = new Intakearm(intake,piviot,upperLimit,lowerLimit);
-    }
-
-    private void outakeinit(){
-        DcMotor slideMotor = hardwareMap.get(DcMotor.class, "Output Raise");
-        Servo piviot = hardwareMap.get(Servo.class, "Pivot Output");
-
-        output = new Outake(slideMotor, piviot);
-    }
     private void swerveInit(){
         /*
     The servo center offset is how far from right the servo's zero is
