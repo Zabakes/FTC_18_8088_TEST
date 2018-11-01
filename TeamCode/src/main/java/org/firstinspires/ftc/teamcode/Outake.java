@@ -4,23 +4,22 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-class Outake extends MechThread{
+class Outake extends Mech{
     DcMotor raiseMotor;
-    Servo piviot;
+    Servo pivot;
     EncoderThread raiseMotorEncoder;
 
-    public static final double MAX_LINEAR_TRAVEL = 5000;//TODO set these
+    public static final double MAX_LINEAR_TRAVEL = 18;//TODO set these
     public static final double MAX_SERVO_POSITION = 180;
     public static final double HOME_SERVO_POSITION = 0;
     public static final double WHEEL_RADIUS = 1.75;
 
-    public Outake(DcMotor raiseMotor, Servo piviot){
+    public Outake(DcMotor raiseMotor, Servo pivot){
         this.raiseMotor = raiseMotor;
-        this.piviot = piviot;
+        this.pivot = pivot;
 
-        raiseMotorEncoder = new EncoderThread(raiseMotor);
+        raiseMotorEncoder = new EncoderThread(raiseMotor, 40);
         raiseMotorEncoder.setRadius(WHEEL_RADIUS);
-
     }
 
     public Outake(){}
@@ -28,23 +27,23 @@ class Outake extends MechThread{
     @Override
     public void init(HardwareMap hardwareMap){
         DcMotor slideMotor = hardwareMap.get(DcMotor.class, "Output Raise");
-        Servo piviot = hardwareMap.get(Servo.class, "Pivot Output");
+        Servo pivot = hardwareMap.get(Servo.class, "Pivot Output");
 
         this.raiseMotor = slideMotor;
-        this.piviot = piviot;
+        this.pivot = pivot;
     }
 
     @Override
     public void run(){
         if(gamepad.a){
             if(!isUp()) {
-                raiseMotorEncoder.runToPosLinear(1, MAX_LINEAR_TRAVEL);
+                raise();
             }else {
-                piviot.setPosition(MAX_SERVO_POSITION);
+                dump();
             }
         }else{
-            raiseMotorEncoder.runToPosLinear(1, 0);
-            piviot.setPosition(HOME_SERVO_POSITION);
+            unDump();
+            lower();
         }
     }
 
@@ -60,5 +59,19 @@ class Outake extends MechThread{
         return raiseMotorEncoder.getLinearPos();
     }
 
+    public void dump(){
+        pivot.setPosition(MAX_SERVO_POSITION);
+    }
 
+    public void unDump(){
+        pivot.setPosition(HOME_SERVO_POSITION);
+    }
+
+    public void lower(){
+        raiseMotorEncoder.runToPosLinear(1, 0);
+    }
+
+    public void raise(){
+        raiseMotorEncoder.runToPosLinear(1, MAX_LINEAR_TRAVEL);
+    }
 }
