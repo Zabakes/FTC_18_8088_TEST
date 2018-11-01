@@ -2,8 +2,10 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
-class Chassis {
+
+class Chassis extends MechThread{
 
     DcMotor frontLeft;
     DcMotor frontRight;
@@ -17,7 +19,31 @@ class Chassis {
         this.backRight = backRight;
     }
 
-    public void run(Gamepad gamepad){
+    public Chassis(){}
+
+    @Override
+    public void init(HardwareMap hardwareMap){
+
+        DcMotor[] motors = new DcMotor[4];
+
+        final int FRONT_LEFT = 3;
+        final int FRONT_RIGHT = 0;
+        final int BACK_RIGHT = 1;
+        final int BACK_LEFT = 2;
+
+        motors[FRONT_LEFT] = hardwareMap.get(DcMotor.class, "Front Left Motor");
+        motors[FRONT_RIGHT] = hardwareMap.get(DcMotor.class, "Front Right Motor");
+        motors[BACK_RIGHT] = hardwareMap.get(DcMotor.class, "Back Right Motor");
+        motors[BACK_LEFT] = hardwareMap.get(DcMotor.class, "Back Left Motor");
+
+        this.frontLeft = motors[FRONT_LEFT];
+        this.frontRight = motors[FRONT_RIGHT];
+        this.backRight = motors[BACK_RIGHT];
+        this.backLeft = motors[BACK_LEFT];
+    }
+
+    @Override
+    public void run(){
         leftSidePower(-gamepad.left_stick_y);
         rightSidePower(-gamepad.right_stick_y);
     }

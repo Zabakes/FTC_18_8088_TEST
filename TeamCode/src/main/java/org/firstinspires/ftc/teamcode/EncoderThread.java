@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.google.gson.internal.bind.MapTypeAdapterFactory;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-public class EncoderThread implements Runnable {
+public class EncoderThread{
 
     DcMotor motor;
 
@@ -17,7 +17,6 @@ public class EncoderThread implements Runnable {
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
-    @Override
     public void run(){
 
         long t = System.currentTimeMillis();
