@@ -1,59 +1,65 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-
-class Chassis extends Mech{
+/**
+ * standard tank style chassis
+ */
+public class Chassis extends Mech {
 
     DcMotor frontLeft;
     DcMotor frontRight;
     DcMotor backLeft;
     DcMotor backRight;
 
-    public Chassis(DcMotor frontLeft, DcMotor frontRight, DcMotor backLeft, DcMotor backRight){
-        this.frontLeft = frontLeft;
-        this.frontRight = frontRight;
-        this.backLeft = backRight;
-        this.backRight = backRight;
+    public Chassis() {
     }
 
-    public Chassis(){}
-
+    /**
+     * see init in mech
+     *
+     * motors named "Front Left Motor" , "Front Right Motor" , "Back Right Motor" , "Back Left Motor"
+     * can you guess which motor's which ?????????????
+     *
+     * @param hardwareMap hardwaremap from the phone
+     */
     @Override
-    public void init(HardwareMap hardwareMap){
+    public void init(HardwareMap hardwareMap) {
 
-        DcMotor[] motors = new DcMotor[4];
+        //initialize the chassis
 
-        final int FRONT_LEFT = 3;
-        final int FRONT_RIGHT = 0;
-        final int BACK_RIGHT = 1;
-        final int BACK_LEFT = 2;
+        frontLeft = hardwareMap.get(DcMotor.class, "Front Left Motor");
+        frontRight = hardwareMap.get(DcMotor.class, "Front Right Motor");
+        backRight = hardwareMap.get(DcMotor.class, "Back Right Motor");
+        backLeft = hardwareMap.get(DcMotor.class, "Back Left Motor");
 
-        motors[FRONT_LEFT] = hardwareMap.get(DcMotor.class, "Front Left Motor");
-        motors[FRONT_RIGHT] = hardwareMap.get(DcMotor.class, "Front Right Motor");
-        motors[BACK_RIGHT] = hardwareMap.get(DcMotor.class, "Back Right Motor");
-        motors[BACK_LEFT] = hardwareMap.get(DcMotor.class, "Back Left Motor");
-
-        this.frontLeft = motors[FRONT_LEFT];
-        this.frontRight = motors[FRONT_RIGHT];
-        this.backRight = motors[BACK_RIGHT];
-        this.backLeft = motors[BACK_LEFT];
     }
 
+    /**
+     * run the chassis in a tank style
+     */
     @Override
-    public void run(){
+    public void run() {
+
+        //run tank
         leftSidePower(-gamepad.left_stick_y);
-        rightSidePower(-gamepad.right_stick_y);
+        rightSidePower(gamepad.right_stick_y);
     }
 
-    public void leftSidePower(float power){
+    /**
+     * set the and send a power to the motors on the the left side of the chassis
+     * @param power power to set
+     */
+    public void leftSidePower(float power) {
         frontLeft.setPower(power);
         backLeft.setPower(power);
     }
-
-    public void rightSidePower(float power){
+    /**
+     * set the and send a power to the motors on the the right side of the chassis
+     * @param power power to set
+     */
+    public void rightSidePower(float power) {
         frontRight.setPower(power);
         backRight.setPower(power);
     }
