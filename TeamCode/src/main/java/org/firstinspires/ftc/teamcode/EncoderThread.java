@@ -13,6 +13,7 @@ public class EncoderThread implements Runnable {
     private double power;
     private double TICKS_PER_REV;
     private double radius;
+    Thread t = new Thread(this);
 
     /**
      * @param motor this is the motor that the encoder is attached to
@@ -83,9 +84,9 @@ public class EncoderThread implements Runnable {
         //run to a  position
         this.power = power;
         this.targetPosition = targetposition;
-        Thread t = new Thread(this);
-        t.start();
-
+        if(!t.isAlive()) {//make sure only one thread at a time is using this motor
+            t.start();
+        }
     }
 
 
@@ -102,8 +103,9 @@ public class EncoderThread implements Runnable {
         //run to a linear pos based on a new radius
         this.power = power;
         this.targetPosition = targetPosition * 2 * Math.PI * radius;
-        Thread t = new Thread(this);
-        t.start();
+        if(!t.isAlive()) {//make sure only one thread at a time is using this motor
+            t.start();
+        }
     }
     /**
      *
@@ -117,8 +119,9 @@ public class EncoderThread implements Runnable {
         //run to a linear position based on a set radius
         this.power = power;
         this.targetPosition = (targetPosition / TICKS_PER_REV) * (2 * Math.PI * radius);
-        Thread t = new Thread(this);
-        t.start();
+        if(!t.isAlive()) {//make sure only one thread at a time is using this motor
+            t.start();
+        }
     }
 
     /**
