@@ -17,7 +17,7 @@ public class Outake extends Mech {
     public static final double MAX_SERVO_POSITION = 1/180;//position of the pivot when up scaled from 0-1
     public static final double HOME_SERVO_POSITION = 1/180;//position of the pivot when down scaled from 0-1
     public static final double WHEEL_RADIUS = 1.75;//radius of the wheel the string is wrapped around
-
+    public static final double CLIMB_HEIGHT =  5;
     /*public Outake(DcMotor raiseMotor, Servo pivot) {
         this.raiseMotor = raiseMotor;
         this.pivot = pivot;
@@ -47,10 +47,11 @@ public class Outake extends Mech {
     }
 
     /**
-     * run in teleop if the a button is pressed it will raise and dump objects otherwise it will retract and return home
+     * run in teleop if the a button is pressed it will raise and dump objects otherwise it will retract and return home if the b button is pressed it will attempt to climb
      */
     @Override
     public void run() {
+
         if (gamepad.a) {
             if (!isUp()) {
                 raise();
@@ -61,7 +62,18 @@ public class Outake extends Mech {
             unDump();
             lower();
         }
-        //TODO b to climb()
+
+        if(gamepad.b){
+            climb();
+        }
+    }
+
+    /**
+     * go to climb height then back down
+     */
+    private void climb() {
+        raiseMotorEncoder.runToPosLinear(.75 , CLIMB_HEIGHT);
+        raiseMotorEncoder.runToPosLinear(.75 , 0);
     }
 
     /**
