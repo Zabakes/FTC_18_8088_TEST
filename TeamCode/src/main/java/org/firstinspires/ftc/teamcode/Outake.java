@@ -63,8 +63,16 @@ public class Outake extends Mech {
             lower();
         }
 
+<<<<<<< Updated upstream
         if(gamepad.b){
             climb();
+=======
+    public boolean isUp(){
+        if(raiseMotorEncoder.getLinearPos() >= MAX_LINEAR_TRAVEL){
+            return true;
+        }else{
+            return false;
+>>>>>>> Stashed changes
         }
     }
 
