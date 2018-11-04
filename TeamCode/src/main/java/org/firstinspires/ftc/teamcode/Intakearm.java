@@ -41,12 +41,11 @@ public class Intakearm extends Mech {//a mechanism intake arm
     @Override
     public void run() {
 
-        if (!upperLimitSwitch.getState() && gamepad.left_bumper) {//if not already raised or tucked (determined with the lower limit switch) raise the intake when the left bumper is pressed
-            raise();
-        }
-        if (!lowerLimitSwitch.getState() && gamepad.right_bumper) {//if not already lowered (determined with the lower limit switch) lower the intake when the right bumper is pressed
+        if(gamepad.left_bumper){
             lower();
         }
+        if(gamepad.right_bumper) {
+            raise();
 
         if (lowerLimitSwitch.getState()) {
             intake.setPower(gamepad.right_trigger);//runs the out intake at a power determined by the right trigger
