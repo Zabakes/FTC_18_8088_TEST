@@ -39,7 +39,7 @@ public abstract class Mech implements Runnable {
 
     /**
      *
-     * run the teleop functions of a mechanism on or off it's own thread this keeps mechanisms isolated from opmodes so it's easy to take something off the robot. calls the run method of a mechanism if it runs on it's own thread this will not run two threads for a single mechanism
+     * run the teleop functions of a mechanism on or off it's own thread. this keeps mechanisms isolated from opmodes so it's easy to take something off the robot. calls the run method of a mechanism if it runs on it's own thread this will not run two threads for a single mechanism
      *
      * @param gamepad gamepad from opmode to run based on
      */
