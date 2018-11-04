@@ -21,7 +21,7 @@ public class Intakearm extends Mech {//a mechanism intake arm
      * see init in mech
      *
      * intake motor called "Inatke Motor" :o
-     * pivot motor called "Pivot Intake" ik I'm crazy
+     * pivot motor called "Pivot Intake"
      * limit switch triggered when the intake is in called "Upper limit Switch"
      * limit switch triggered when the intake is out called "Lower limit Switch"
      *
