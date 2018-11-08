@@ -13,18 +13,11 @@ public class Outake extends Mech {
     private EncoderThread raiseMotorEncoder;
 
     //TODO
-    public static final double MAX_LINEAR_TRAVEL = 18;//max linear travel in inches of the slide
+    public static final double MAX_LINEAR_TRAVEL = 15.75;//max linear travel in inches of the slide
     public static final double MAX_SERVO_POSITION = 1/180;//position of the pivot when up scaled from 0-1
     public static final double HOME_SERVO_POSITION = 1/180;//position of the pivot when down scaled from 0-1
-    public static final double WHEEL_RADIUS = 1.75;//radius of the wheel the string is wrapped around
+    public static final double WHEEL_RADIUS = 1.325;//radius of the wheel the string is wrapped around
     public static final double CLIMB_HEIGHT =  5;
-    /*public Outake(DcMotor raiseMotor, Servo pivot) {
-        this.raiseMotor = raiseMotor;
-        this.pivot = pivot;
-
-        raiseMotorEncoder = new EncoderThread(raiseMotor, 40);
-        raiseMotorEncoder.setRadius(WHEEL_RADIUS);
-    }*/
 
     public Outake() {
     }
@@ -44,6 +37,14 @@ public class Outake extends Mech {
 
         this.raiseMotor = slideMotor;
         this.pivot = pivot;
+
+        raiseMotorEncoder = new EncoderThread(raiseMotor, 40);
+        raiseMotorEncoder.setRadius(WHEEL_RADIUS);
+    }
+
+    @Override
+    public void auto() {
+        //TODO WRITE AUTO CODE
     }
 
     /**
@@ -62,20 +63,10 @@ public class Outake extends Mech {
             unDump();
             lower();
         }
-
-<<<<<<< Updated upstream
-        if(gamepad.b){
+        if (gamepad.b) {
             climb();
-=======
-    public boolean isUp(){
-        if(raiseMotorEncoder.getLinearPos() >= MAX_LINEAR_TRAVEL){
-            return true;
-        }else{
-            return false;
->>>>>>> Stashed changes
         }
     }
-
     /**
      * go to climb height then back down
      */
@@ -88,7 +79,7 @@ public class Outake extends Mech {
      * @return is the output all the way up
      */
     public boolean isUp() {
-        return raiseMotorEncoder.getLinearPos() > MAX_LINEAR_TRAVEL;
+        return raiseMotorEncoder.getLinearPos() >= MAX_LINEAR_TRAVEL;
     }
 
     /**
@@ -123,5 +114,9 @@ public class Outake extends Mech {
      */
     public void raise() {
         raiseMotorEncoder.runToPosLinear(1, MAX_LINEAR_TRAVEL);
+    }
+
+    public void unClimb(){
+        raiseMotorEncoder.runToPosLinear(1, CLIMB_HEIGHT+3);
     }
 }

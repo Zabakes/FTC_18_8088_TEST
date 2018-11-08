@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -12,6 +13,8 @@ public class Chassis extends Mech {
     DcMotor frontRight;
     DcMotor backLeft;
     DcMotor backRight;
+    DcMotor[] motors;
+    EncoderThread[] encoders = new EncoderThread[motors.length];
 
     public Chassis() {
     }
@@ -34,6 +37,22 @@ public class Chassis extends Mech {
         backRight = hardwareMap.get(DcMotor.class, "Back Right Motor");
         backLeft = hardwareMap.get(DcMotor.class, "Back Left Motor");
 
+        motors = new DcMotor[]{frontLeft,frontRight,backLeft,backRight};
+
+
+        int i = 0;
+        for (DcMotor m:motors) {
+            encoders[i] = new EncoderThread(m, 40);
+            encoders[i].setRadius(3);
+            i++;
+        }
+
+    }
+
+    @Override
+    public void auto() {
+
+
     }
 
     /**
@@ -41,7 +60,6 @@ public class Chassis extends Mech {
      */
     @Override
     public void run() {
-
         //run tank
         leftSidePower(-gamepad.left_stick_y);
         rightSidePower(gamepad.right_stick_y);
@@ -63,4 +81,10 @@ public class Chassis extends Mech {
         frontRight.setPower(power);
         backRight.setPower(power);
     }
+
+   public void go(float power , double distance){
+       for (EncoderThread motor: encoders) {
+           motor.runToPosLinear(power, distance);
+       }
+   }
 }
