@@ -12,7 +12,7 @@ public class EncoderThread implements Runnable {
     private double targetPosition;
     private double power;
     private double TICKS_PER_REV;
-    private double radius;
+    private double radius = 0;
     Thread t = new Thread(this);
 
     /**
@@ -98,6 +98,7 @@ public class EncoderThread implements Runnable {
      * @param targetPosition sets a linear position for the motor to run to
      * @param radius radius of the wheel or pulley attached to the wheel
      */
+    @Deprecated
     public void runToPosLinear(double power, double targetPosition, double radius) {
 
         //run to a linear pos based on a new radius
@@ -118,7 +119,7 @@ public class EncoderThread implements Runnable {
 
         //run to a linear position based on a set radius
         this.power = power;
-        this.targetPosition = (targetPosition / TICKS_PER_REV) * (2 * Math.PI * radius);
+        this.targetPosition = (targetPosition)/((2 * Math.PI * radius)/TICKS_PER_REV);
         if(!t.isAlive()) {//make sure only one thread at a time is using this motor
             t.start();
         }
@@ -129,7 +130,7 @@ public class EncoderThread implements Runnable {
      */
     public double getLinearPos() {
         //get a linear pos based on a radius
-        return (motor.getCurrentPosition() / TICKS_PER_REV) * (2 * Math.PI * radius);
+        return (motor.getCurrentPosition())/((2 * Math.PI * radius)/TICKS_PER_REV);
     }
 
     /**
