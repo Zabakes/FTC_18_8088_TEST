@@ -37,6 +37,8 @@ public abstract class Mech implements Runnable {
      */
     public abstract void init(HardwareMap hardwareMap);
 
+    public abstract void auto();
+
     /**
      *
      * run the teleop functions of a mechanism on or off it's own thread. this keeps mechanisms isolated from opmodes so it's easy to take something off the robot. calls the run method of a mechanism if it runs on it's own thread this will not run two threads for a single mechanism

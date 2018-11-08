@@ -39,53 +39,63 @@ public class Intakearm extends Mech {//a mechanism intake arm
     }
 
     @Override
+    public void auto() {
+        //TODO WRITE AUTO CODE
+    }
+
+    @Override
     public void run() {
 
-        if(gamepad.left_bumper){
+        if (gamepad.left_bumper) {
             lower();
         }
-        if(gamepad.right_bumper) {
+        if (gamepad.right_bumper) {
             raise();
+        }
+            if (lowerLimitSwitch.getState()) {
+                intake.setPower(gamepad.right_trigger);//runs the out intake at a power determined by the right trigger
+                intake.setPower(-gamepad.left_trigger);//retracts the intake at a power determined by the left trigger
+            }
 
-        if (lowerLimitSwitch.getState()) {
-            intake.setPower(gamepad.right_trigger);//runs the out intake at a power determined by the right trigger
-            intake.setPower(-gamepad.left_trigger);//retracts the intake at a power determined by the left trigger
+
         }
 
 
-    }
-
-    public void lower() {//lowers the arm by running the motor until the lower limit switch is triggered
-        long time = System.currentTimeMillis();//store the time that this method was called
-        while (!lowerLimitSwitch.getState() && !piviotTimeout(time)) {//make sure that arm is not up (through the limit switch) and that the motor is'nt stuck (by passing the time the method was called to pivot timeout). if both conditions are met run the motor up.
-            pivot.setPower(-.75);
+        public void lower () {//lowers the arm by running the motor until the lower limit switch is triggered
+            long time = System.currentTimeMillis();//store the time that this method was called
+            while (!lowerLimitSwitch.getState() && !piviotTimeout(time)) {//make sure that arm is not up (through the limit switch) and that the motor is'nt stuck (by passing the time the method was called to pivot timeout). if both conditions are met run the motor up.
+                pivot.setPower(-.75);
+            }
+            pivot.setPower(0);//once either the limit switch is triggered or the action has timed out turn off the motor
         }
-        pivot.setPower(0);//once either the limit switch is triggered or the action has timed out turn off the motor
-    }
 
-    public void raise() {//raises or tucks the arm back in by running the motor until the upper limit switch is triggered
-        long time = System.currentTimeMillis();//store the time that this method was called
-        while (!upperLimitSwitch.getState() && !piviotTimeout(time)) {
-            pivot.setPower(.75);
+        public void raise (){//raises or tucks the arm back in by running the motor until the upper limit switch is triggered
+            long time = System.currentTimeMillis();//store the time that this method was called
+            while (!upperLimitSwitch.getState() && !piviotTimeout(time)) {
+                pivot.setPower(.75);
+            }
+            pivot.setPower(0);//once either the limit switch is triggered or the action has timed out turn off the motor
         }
-        pivot.setPower(0);//once either the limit switch is triggered or the action has timed out turn off the motor
-    }
 
-    private boolean piviotTimeout(long initTime) { // takes the time the arm started moving and checks that the arm has only been running for 1000ms
-        if (System.currentTimeMillis() > initTime + 1000) {//make sure that arm is not up (through the limit switch) and that the motor is'nt stuck (by passing the time the method was called to pivot timeout). if both conditions are met run the motor up.
-            pivot.setPower(0);
-            return true;//if it's been running for too long return true it has timed out
-        } else {
-            return false;
+        private boolean piviotTimeout ( long initTime)
+        { // takes the time the arm started moving and checks that the arm has only been running for 1000ms
+            if (System.currentTimeMillis() > initTime + 1000) {//make sure that arm is not up (through the limit switch) and that the motor is'nt stuck (by passing the time the method was called to pivot timeout). if both conditions are met run the motor up.
+                pivot.setPower(0);
+                return true;//if it's been running for too long return true it has timed out
+            } else {
+                return false;
+            }
         }
-    }
 
-    public void extend() {//extends and intakes at full power
-        intake.setPower(1);
-    }
 
-    public void retract() {//retracts the intake at full power
-        intake.setPower(0);
-    }
+
+        public void extend () {//extends and intakes at full power
+            intake.setPower(1);
+        }
+
+        public void retract () {//retracts the intake at full power
+            intake.setPower(0);
+        }
+
 
 }
