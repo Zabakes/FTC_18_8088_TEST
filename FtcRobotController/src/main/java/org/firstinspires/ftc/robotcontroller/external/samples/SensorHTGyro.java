@@ -59,7 +59,7 @@ public class SensorHTGyro extends LinearOpMode {
     Gyroscope gyroscope;
     HiTechnicNxtGyroSensor hiTechnicNxtGyroSensor;
 
-    @Override public void runOpMode() throws InterruptedException {
+    @Override public void runOpMode() {
 
         // Get a reference to the gyroscope from the hardware map
         gyroscope = hardwareMap.get(Gyroscope.class, "gyro");
