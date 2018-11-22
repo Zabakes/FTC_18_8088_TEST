@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class Teleop8088 extends OpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
-    private static Mech[] mechs = new Mech[]{new Chassis(), new Intakearm(), new Outake()};//create an array of the abstract object mech containing all mechanisms on the robot this is possible because all the mechanisms extend the mechs class
+    private static Mech[] mechs = new Mech[]{new Chassis(16.0,16.0), new Intakearm(), new Outake()};//create an array of the abstract object mech containing all mechanisms on the robot this is possible because all the mechanisms extend the mechs class
 
     @Override
     public void init() {
