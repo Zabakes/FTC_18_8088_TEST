@@ -1,53 +1,80 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.vuforia.CameraDevice;
-import com.vuforia.Frame;
-import com.vuforia.Image;
-import com.vuforia.PIXEL_FORMAT;
-import com.vuforia.Vuforia;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.Camera;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.internal.vuforia.externalprovider.VuforiaWebcam;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 
-@Autonomous(name = "auto8080TEST", group = "Iterative Opmode")
-public class Auto8088 extends LinearOpMode {
+
+public class Auto8088 {
 
 
-    private ElapsedTime runtime = new ElapsedTime();
-    private Intakearm intake = new Intakearm();
-    private Chassis chassis = new Chassis();
-    private Outake outake = new Outake();
-    private VuforiaLocalizer vuforia;
+    private static Intakearm intake = new Intakearm();
+    private static Chassis chassis = new Chassis(16.0, 16.0);//TODO set these
+    private static Outake outake = new Outake();
+    private static VuforiaLocalizer vuforia;
 
-    @Override
-    public void runOpMode() {
+    public static final Double BACKUP_DISTANCE = 1.0;
+    public static final Double TO_GOLD_DEGREES = 5.0;
+    public static Double TO_CRATER_DEGREES = 10.0;
+    public static Double TO_CRATER_DISTANCE = 10.0;
+    public static Double TO_DEPO_DISTANCE = 10.0;
 
-        intake.init(hardwareMap);
-        chassis.init(hardwareMap);
-        outake.init(hardwareMap);
+    public static void init(HardwareMap h){
+        intake.init(h);
+        chassis.init(h);
+        outake.init(h);
+    }
 
-        waitForStart();
+    public static void runOpMode(boolean isNearCrater) {
 
         outake.unClimb();
-        chassis.go(1, -5);
-        //TODO something else get to the crater
+        chassis.go(1, -BACKUP_DISTANCE);
         outake.lower();
 
+        float turnPower;
+        double goDistance;
+
+        switch (goldPosition()){
+            case LEFT:
+                turnPower = -1;
+                goDistance = 5;
+                TO_CRATER_DEGREES += TO_GOLD_DEGREES;
+                break;
+            case RIGHT:
+                turnPower = 1;
+                goDistance = 5;
+                TO_CRATER_DEGREES -= TO_GOLD_DEGREES;
+                break;
+            default:
+                turnPower = 0;
+                goDistance = 3;
+        }
+
+        chassis.turn(turnPower, TO_GOLD_DEGREES);
+        chassis.go(1,goDistance);
+
+        if(isNearCrater){
+            chassis.go(1,4);
+        }else{
+            chassis.turn(-turnPower, TO_GOLD_DEGREES*2);
+            chassis.go(1,TO_DEPO_DISTANCE);
+            intake.retract();
+            chassis.turn(1,TO_CRATER_DEGREES);
+            chassis.go(1,TO_CRATER_DISTANCE);
+        }
 
     }
 
-    private goldPosition goldPosition(){
+
+    private static goldPosition goldPosition(){
 
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
