@@ -16,7 +16,12 @@ public class Chassis extends Mech {
     DcMotor[] motors;
     EncoderThread[] encoders = new EncoderThread[motors.length];
 
-    public Chassis() {
+    double width;
+    double depth;
+
+    public Chassis(Double width, double depth) {
+        this.width = width;
+        this.depth = depth;
     }
 
     /**
@@ -86,5 +91,15 @@ public class Chassis extends Mech {
        for (EncoderThread motor: encoders) {
            motor.runToPosLinear(power, distance);
        }
+   }
+
+   public void turn(float power, double degrees){
+
+        double wheelCircleCircumfrence = 2*Math.PI*Math.sqrt(Math.pow(width/2,2)+ Math.pow(depth/2,2));
+        double distToTurn = wheelCircleCircumfrence*360/degrees;
+        encoders[1].runToPosLinear(power, distToTurn);
+        encoders[2].runToPosLinear(-power, distToTurn);
+        encoders[3].runToPosLinear(power, distToTurn);
+        encoders[4].runToPosLinear(-power, distToTurn);
    }
 }
