@@ -40,11 +40,11 @@ public class EncoderThread implements Runnable {
 
         //run to the position
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motor.setTargetPosition((int) Math.round(targetPosition));
+        motor.setTargetPosition((int) Math.round(targetPosition*(power/Math.abs(power))));
         motor.setPower(power);
 
         //wait to get to the position or timeout
-        while (motor.isBusy() && System.currentTimeMillis() < t + Math.abs(targetPosition - initialPos) * 1 * power) {
+        while (motor.isBusy() && System.currentTimeMillis() < t + Math.abs(targetPosition - initialPos) * power) {
 
         }
 
