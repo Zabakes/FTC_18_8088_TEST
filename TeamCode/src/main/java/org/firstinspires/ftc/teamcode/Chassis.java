@@ -54,12 +54,6 @@ public class Chassis extends Mech {
 
     }
 
-    @Override
-    public void auto() {
-
-
-    }
-
     /**
      * run the chassis in a tank style
      */
@@ -75,31 +69,39 @@ public class Chassis extends Mech {
      * @param power power to set
      */
     public void leftSidePower(float power) {
-        frontLeft.setPower(power);
-        backLeft.setPower(power);
+        if(opModeIsactive) {
+            frontLeft.setPower(power);
+            backLeft.setPower(power);
+        }
     }
     /**
      * set the and send a power to the motors on the the right side of the chassis
      * @param power power to set
      */
     public void rightSidePower(float power) {
-        frontRight.setPower(power);
-        backRight.setPower(power);
+        if(opModeIsactive) {
+            frontRight.setPower(power);
+            backRight.setPower(power);
+        }
     }
 
    public void go(float power , double distance){
-       for (EncoderThread motor: encoders) {
-           motor.runToPosLinear(power, distance);
-       }
+        if(opModeIsactive) {
+            for (EncoderThread motor : encoders) {
+                motor.runToPosLinear(power, distance);
+            }
+        }
    }
 
    public void turn(float power, double degrees){
 
-        double wheelCircleCircumfrence = 2*Math.PI*Math.sqrt(Math.pow(width/2,2)+ Math.pow(depth/2,2));
-        double distToTurn = wheelCircleCircumfrence*360/degrees;
-        encoders[1].runToPosLinear(power, distToTurn);
-        encoders[2].runToPosLinear(-power, distToTurn);
-        encoders[3].runToPosLinear(power, distToTurn);
-        encoders[4].runToPosLinear(-power, distToTurn);
+        if (opModeIsactive) {
+            double wheelCircleCircumfrence = 2 * Math.PI * Math.sqrt(Math.pow(width / 2, 2) + Math.pow(depth / 2, 2));
+            double distToTurn = wheelCircleCircumfrence * 360 / degrees;
+            encoders[1].runToPosLinear(power, distToTurn);
+            encoders[2].runToPosLinear(-power, distToTurn);
+            encoders[3].runToPosLinear(power, distToTurn);
+            encoders[4].runToPosLinear(-power, distToTurn);
+        }
    }
 }
