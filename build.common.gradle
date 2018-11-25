@@ -105,5 +105,13 @@ repositories {
     flatDir {
         dirs rootProject.file('libs')
     }
+    jcenter()
 }
+
+allprojects {
+    repositories{
+        google()
+    }
+}
+
 apply from: 'build.release.gradle'

@@ -42,11 +42,6 @@ public class Outake extends Mech {
         raiseMotorEncoder.setRadius(WHEEL_RADIUS);
     }
 
-    @Override
-    public void auto() {
-        //TODO WRITE AUTO CODE
-    }
-
     /**
      * run in teleop if the a button is pressed it will raise and dump objects otherwise it will retract and return home if the b button is pressed it will attempt to climb
      */
@@ -71,8 +66,10 @@ public class Outake extends Mech {
      * go to climb height then back down
      */
     private void climb() {
-        raiseMotorEncoder.runToPosLinear(.75 , CLIMB_HEIGHT);
-        raiseMotorEncoder.runToPosLinear(.75 , 0);
+        if (opModeIsactive) {
+            raiseMotorEncoder.runToPosLinear(.75, CLIMB_HEIGHT);
+            raiseMotorEncoder.runToPosLinear(.75, 0);
+        }
     }
 
     /**
@@ -93,30 +90,35 @@ public class Outake extends Mech {
      *dump objects out of the basket
      */
     public void dump() {
-        pivot.setPosition(MAX_SERVO_POSITION);
+        if(opModeIsactive)
+            pivot.setPosition(MAX_SERVO_POSITION);
     }
     /**
      *retract the basket
      */
     public void unDump() {
-        pivot.setPosition(HOME_SERVO_POSITION);
+        if(opModeIsactive)
+            pivot.setPosition(HOME_SERVO_POSITION);
     }
 
     /**
      * lower the slide
      */
     public void lower() {
-        raiseMotorEncoder.runToPosLinear(1, 0);
+        if(opModeIsactive)
+            raiseMotorEncoder.runToPosLinear(1, 0);
     }
 
     /**
      * raise the slide
      */
     public void raise() {
-        raiseMotorEncoder.runToPosLinear(1, MAX_LINEAR_TRAVEL);
+        if(opModeIsactive)
+            raiseMotorEncoder.runToPosLinear(1, MAX_LINEAR_TRAVEL);
     }
 
     public void unClimb(){
-        raiseMotorEncoder.runToPosLinear(1, CLIMB_HEIGHT+3);
+        if(opModeIsactive)
+            raiseMotorEncoder.runToPosLinear(1, CLIMB_HEIGHT+3);
     }
 }

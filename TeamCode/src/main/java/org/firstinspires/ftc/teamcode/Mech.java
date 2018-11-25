@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -15,6 +16,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 */
 
 public abstract class Mech implements Runnable {
+
+    static boolean opModeIsactive = false;
 
     /**
      * set whether or not a given mech should run on it's own thread
@@ -37,7 +40,6 @@ public abstract class Mech implements Runnable {
      */
     public abstract void init(HardwareMap hardwareMap);
 
-    public abstract void auto();
 
     /**
      *

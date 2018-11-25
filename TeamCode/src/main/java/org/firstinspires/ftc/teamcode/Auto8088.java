@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.openftc.revextensions2.RevExtensions2;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 
@@ -31,6 +32,7 @@ public class Auto8088 {
         intake.init(h);
         chassis.init(h);
         outake.init(h);
+        RevExtensions2.init();
     }
 
     public static void runOpMode(boolean isNearCrater) {
@@ -69,6 +71,8 @@ public class Auto8088 {
             intake.retract();
             chassis.turn(1,TO_CRATER_DEGREES);
             chassis.go(1,TO_CRATER_DISTANCE);
+            intake.lower();
+            intake.extend();
         }
 
     }
