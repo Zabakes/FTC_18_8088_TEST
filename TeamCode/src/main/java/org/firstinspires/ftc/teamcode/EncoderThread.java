@@ -44,7 +44,7 @@ public class EncoderThread implements Runnable {
         motor.setPower(power);
 
         //wait to get to the position or timeout
-        while (motor.isBusy() && System.currentTimeMillis() < t + Math.abs(targetPosition - initialPos) * power) {
+        while (motor.isBusy() && System.currentTimeMillis() < t + Math.abs(targetPosition - initialPos) * power && Mech.opModeIsactive) {
 
         }
 
