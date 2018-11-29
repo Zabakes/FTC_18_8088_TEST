@@ -108,10 +108,6 @@ public class SwerveDrive extends Mech {
 
     }
 
-    @Override
-    public void auto() {
-        //TODO WRITE AUTO CODE
-    }
 
     public SwerveDrive() {
     }
