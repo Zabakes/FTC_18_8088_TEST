@@ -11,16 +11,15 @@ public class Outake extends Mech {
     private DcMotor raiseMotor;
     private Servo pivot;
     private EncoderThread raiseMotorEncoder;
+    private boolean isUp = false;
 
     //TODO
     public static final double MAX_LINEAR_TRAVEL = 15.75;//max linear travel in inches of the slide
-    public static final double MAX_SERVO_POSITION = 1/180;//position of the pivot when up scaled from 0-1
-    public static final double HOME_SERVO_POSITION = 1/180;//position of the pivot when down scaled from 0-1
+    public static final double MAX_SERVO_POSITION = 250.0/280.0;//position of the pivot when up scaled from 0-1
+    public static final double HOME_SERVO_POSITION = 0/270;//position of the pivot when down scaled from 0-1
     public static final double WHEEL_RADIUS = 1.325;//radius of the wheel the string is wrapped around
     public static final double CLIMB_HEIGHT =  5;
 
-    public Outake() {
-    }
 
     /**
      * see init in mech
@@ -47,14 +46,10 @@ public class Outake extends Mech {
      */
     @Override
     public void run() {
-
         if (gamepad.a) {
-            if (!isUp()) {
-                raise();
-            } else {
-                dump();
-            }
-        } else {
+            raise();
+            dump();
+        }else{
             unDump();
             lower();
         }
@@ -66,18 +61,10 @@ public class Outake extends Mech {
      * go to climb height then back down
      */
     private void climb() {
-        if (opModeIsactive) {
             raiseMotorEncoder.runToPosLinear(.75, CLIMB_HEIGHT);
             raiseMotorEncoder.runToPosLinear(.75, 0);
-        }
     }
 
-    /**
-     * @return is the output all the way up
-     */
-    public boolean isUp() {
-        return raiseMotorEncoder.getLinearPos() >= MAX_LINEAR_TRAVEL;
-    }
 
     /**
      * @return the height is inches above home that the mechanism currently is
@@ -90,14 +77,12 @@ public class Outake extends Mech {
      *dump objects out of the basket
      */
     public void dump() {
-        if(opModeIsactive)
             pivot.setPosition(MAX_SERVO_POSITION);
     }
     /**
      *retract the basket
      */
     public void unDump() {
-        if(opModeIsactive)
             pivot.setPosition(HOME_SERVO_POSITION);
     }
 
@@ -105,7 +90,6 @@ public class Outake extends Mech {
      * lower the slide
      */
     public void lower() {
-        if(opModeIsactive)
             raiseMotorEncoder.runToPosLinear(1, 0);
     }
 
@@ -113,12 +97,16 @@ public class Outake extends Mech {
      * raise the slide
      */
     public void raise() {
-        if(opModeIsactive)
             raiseMotorEncoder.runToPosLinear(1, MAX_LINEAR_TRAVEL);
     }
 
     public void unClimb(){
-        if(opModeIsactive)
             raiseMotorEncoder.runToPosLinear(1, CLIMB_HEIGHT+3);
     }
+
+    @Override
+    public String name(){
+        return "outptut";
+    }
+
 }

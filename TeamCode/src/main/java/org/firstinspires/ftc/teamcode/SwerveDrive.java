@@ -108,6 +108,11 @@ public class SwerveDrive extends Mech {
 
     }
 
+    @Override
+    public String name() {
+        return "swerve";
+    }
+
 
     public SwerveDrive() {
     }

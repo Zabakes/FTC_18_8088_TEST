@@ -21,8 +21,10 @@ public class EncoderThread implements Runnable {
      */
     public EncoderThread(DcMotor motor, double gearReduction) {
         this.motor = motor;
+        DcMotor.RunMode mode = motor.getMode();
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         TICKS_PER_REV = 7 * gearReduction;
+        motor.setMode(mode);
     }
 
     /**
@@ -80,13 +82,10 @@ public class EncoderThread implements Runnable {
      * @param targetposition position to run to
      */
     public void runToPosition(int power, int targetposition) {
-
         //run to a  position
         this.power = power;
         this.targetPosition = targetposition;
-        if(!t.isAlive()) {//make sure only one thread at a time is using this motor
-            t.start();
-        }
+       start();
     }
 
 
@@ -100,13 +99,10 @@ public class EncoderThread implements Runnable {
      */
     @Deprecated
     public void runToPosLinear(double power, double targetPosition, double radius) {
-
         //run to a linear pos based on a new radius
         this.power = power;
-        this.targetPosition = targetPosition * 2 * Math.PI * radius;
-        if(!t.isAlive()) {//make sure only one thread at a time is using this motor
-            t.start();
-        }
+        this.targetPosition = (targetPosition)/((2 * Math.PI * radius)/TICKS_PER_REV);
+        start();
     }
     /**
      *
@@ -120,9 +116,7 @@ public class EncoderThread implements Runnable {
         //run to a linear position based on a set radius
         this.power = power;
         this.targetPosition = (targetPosition)/((2 * Math.PI * radius)/TICKS_PER_REV);
-        if(!t.isAlive()) {//make sure only one thread at a time is using this motor
-            t.start();
-        }
+        start();
     }
 
     /**
@@ -140,5 +134,14 @@ public class EncoderThread implements Runnable {
      */
     public void setRadius(double radius) {
         this.radius = radius;
+    }
+
+    public void start(){
+       /* try{
+            t.start();
+        }catch (Exception e){
+
+        }*/
+       run();
     }
 }

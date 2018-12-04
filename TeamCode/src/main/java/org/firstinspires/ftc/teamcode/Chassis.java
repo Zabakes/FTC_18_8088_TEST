@@ -14,15 +14,15 @@ public class Chassis extends Mech {
     DcMotor backLeft;
     DcMotor backRight;
     DcMotor[] motors;
-    EncoderThread[] encoders = new EncoderThread[motors.length];
+    EncoderThread[] encoders;
 
     double width;
     double depth;
-
-    public Chassis(Double width, double depth) {
+    public Chassis(double width, double depth){
         this.width = width;
         this.depth = depth;
     }
+
 
     /**
      * see init in mech
@@ -43,15 +43,20 @@ public class Chassis extends Mech {
         backLeft = hardwareMap.get(DcMotor.class, "Back Left Motor");
 
         motors = new DcMotor[]{frontLeft,frontRight,backLeft,backRight};
+        encoders = new EncoderThread[motors.length];
 
-
-        int i = 0;
+       /*int i = 0;
         for (DcMotor m:motors) {
             encoders[i] = new EncoderThread(m, 40);
             encoders[i].setRadius(3);
             i++;
-        }
+        }*/
 
+    }
+
+    @Override
+    public String name() {
+        return "chassis";
     }
 
     /**
@@ -59,9 +64,10 @@ public class Chassis extends Mech {
      */
     @Override
     public void run() {
-        //run tank
-        leftSidePower(-gamepad.left_stick_y);
-        rightSidePower(gamepad.right_stick_y);
+        if(opModeIsactive) {
+            leftSidePower(-gamepad.left_stick_y);
+            rightSidePower(gamepad.right_stick_y);
+        }
     }
 
     /**
