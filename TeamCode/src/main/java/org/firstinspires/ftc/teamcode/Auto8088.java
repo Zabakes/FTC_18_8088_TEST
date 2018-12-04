@@ -116,37 +116,39 @@ public class Auto8088 {
 
             Bitmap pic = vuforia.convertFrameToBitmap(frame);
 
-            int RedUpperthresholdG = 254;//threshold that determines if a pixel is red or blue
-            int RedLowerthresholdG = 254;//threshold that determines if a pixel is red or blue
-            int GreenUpperthresholdG = 254;//threshold that determines if a pixel is red or blue
-            int GreenLowerthresholdG = 254;//threshold that determines if a pixel is red or blue
-            int BlueUpperthresholdG = 254;//threshold that determines if a pixel is red or blue
-            int BlueLowerthresholdG = 254;//threshold that determines if a pixel is red or blue
 
-            int RedUpperthresholdB = 254;//threshold that determines if a pixel is red or blue
-            int RedLowerthresholdB = 254;//threshold that determines if a pixel is red or blue
-            int GreenUpperthresholdB = 254;//threshold that determines if a pixel is red or blue
-            int GreenLowerthresholdB = 254;//threshold that determines if a pixel is red or blue
-            int BlueUpperthresholdB = 254;//threshold that determines if a pixel is red or blue
-            int BlueLowerthresholdB = 254;//threshold that determines if a pixel is red or blue
+            //TODO set these
+            int RedUpperthresholdG = 254;
+            int RedLowerthresholdG = 254;
+            int GreenUpperthresholdG = 254;
+            int GreenLowerthresholdG = 254;
+            int BlueUpperthresholdG = 254;
+            int BlueLowerthresholdG = 254;
 
-            for (int y = 0; y < pic.getHeight(); y++) {//iterating through every collum of pixels
-                for (int x = 0; x < pic.getWidth(); x++) {//iterating through every row of pixels
+            int RedUpperthresholdB = 254;
+            int RedLowerthresholdB = 254;
+            int GreenUpperthresholdB = 254;
+            int GreenLowerthresholdB = 254;
+            int BlueUpperthresholdB = 254;
+            int BlueLowerthresholdB = 254;
+
+            for (int y = 0; y < pic.getHeight(); y++) {
+                for (int x = 0; x < pic.getWidth(); x++) {
 
                     if (Color.red(pic.getPixel(x, y)) <= RedUpperthresholdG && Color.red(pic.getPixel(x, y)) >= RedLowerthresholdG
                             && Color.green(pic.getPixel(x, y)) <= GreenUpperthresholdG && Color.green(pic.getPixel(x, y)) >= GreenLowerthresholdG
                             && Color.blue(pic.getPixel(x, y)) <= BlueUpperthresholdG && Color.blue(pic.getPixel(x, y)) >= BlueLowerthresholdG
-                            ) {//testing if the pixel is red
-                        goldAvgX += x;//adding the x value of the pixel that was previously determined to be red to the total x value of red pixels
-                        goldNum++;//declaring that another red pixel was found
+                            ) {
+                        goldAvgX += x;
+                        goldNum++;
                     }
 
                     if (Color.red(pic.getPixel(x, y)) <= RedUpperthresholdB && Color.red(pic.getPixel(x, y)) >= RedLowerthresholdB
                             && Color.green(pic.getPixel(x, y)) <= GreenUpperthresholdB && Color.green(pic.getPixel(x, y)) >= GreenLowerthresholdB
                             && Color.blue(pic.getPixel(x, y)) <= BlueUpperthresholdB && Color.blue(pic.getPixel(x, y)) >= BlueLowerthresholdB
-                            ) {//testing if the pixel is red
-                        silverAvgX += x;//adding the x value of the pixel that was previously determined to be red to the total x value of red pixels
-                        silverNum++;//declaring that another red pixel was found
+                            ) {
+                        silverAvgX += x;
+                        silverNum++;
                     }
                 }
             }

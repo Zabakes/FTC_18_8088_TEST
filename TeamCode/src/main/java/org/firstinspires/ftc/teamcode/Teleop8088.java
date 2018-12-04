@@ -8,12 +8,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.openftc.revextensions2.RevExtensions2;
 
-@TeleOp(name = "Teleop8088TEST", group = "Iterative Opmode")
+@TeleOp(name = "Teleop8088", group = "Iterative Opmode")
 
 public class Teleop8088 extends OpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
-    public static Mech[] mechs = new Mech[]{new Chassis(16.0,16.0), new Outake()};//create an array of the abstract object mech containing all mechanisms on the robot this is possible because all the mechanisms extend the mechs class
+    public static Mech[] mechs = new Mech[]{new Outake()};//create an array of the abstract object mech containing all mechanisms on the robot this is possible because all the mechanisms extend the mechs class
 
     @Override
     public void init() {
@@ -31,11 +31,15 @@ public class Teleop8088 extends OpMode {
     @Override
     public void loop() {
        Mech.opModeIsactive = true;
-        for (Mech m : mechs) {//reads each mech in mechs and calls it m
+        for (Mech m : mechs) {//reads each mech in mechs and calls it's run method
             m.updateAndStart(gamepad1);//send a copy of the gamepad out to all the mechs(m) and run them with that gamepad
             telemetry.addData(m.name(), m);
             telemetry.update();
         }
+    }
+
+    public static void telemtryAddData(String string){
+        telemtryAddData(string);
     }
 
     @Override

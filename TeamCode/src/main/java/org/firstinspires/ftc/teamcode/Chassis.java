@@ -45,12 +45,13 @@ public class Chassis extends Mech {
         motors = new DcMotor[]{frontLeft,frontRight,backLeft,backRight};
         encoders = new EncoderThread[motors.length];
 
-       /*int i = 0;
+       int i = 0;
         for (DcMotor m:motors) {
+            m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             encoders[i] = new EncoderThread(m, 40);
             encoders[i].setRadius(3);
             i++;
-        }*/
+        }
 
     }
 
@@ -92,8 +93,8 @@ public class Chassis extends Mech {
     }
 
    public void go(float power , double distance){
-        if(opModeIsactive) {
             for (EncoderThread motor : encoders) {
+                if(opModeIsactive) {
                 motor.runToPosLinear(power, distance);
             }
         }
