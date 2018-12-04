@@ -15,12 +15,12 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 
 
 public class Auto8088 {
-
+    private static VuforiaLocalizer vuforia;
 
     private static Intakearm intake = new Intakearm();
-    private static Chassis chassis = new Chassis(16.0, 16.0);//TODO set these
+    private static Chassis chassis = new Chassis(16,16);//TODO set these
     private static Outake outake = new Outake();
-    private static VuforiaLocalizer vuforia;
+
 
     public static final Double BACKUP_DISTANCE = 1.0;
     public static final Double TO_GOLD_DEGREES = 5.0;
@@ -29,10 +29,10 @@ public class Auto8088 {
     public static Double TO_DEPO_DISTANCE = 10.0;
 
     public static void init(HardwareMap h){
+        RevExtensions2.init();
         intake.init(h);
         chassis.init(h);
         outake.init(h);
-        RevExtensions2.init();
     }
 
     public static void runOpMode(boolean isNearCrater) {
@@ -84,7 +84,7 @@ public class Auto8088 {
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          * We can pass Vuforia the handle to a camera preview resource (on the RC phone);
          * If no camera monitor is desired, use the parameterless constructor instead (commented out below).
-         */
+        */
 
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 

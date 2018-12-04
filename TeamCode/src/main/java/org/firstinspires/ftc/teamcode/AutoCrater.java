@@ -4,12 +4,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-@Autonomous(name = "Auto Crater", group = "Iterative Opmode")
-public class AutoCrater extends OpMode {
+//@Autonomous(name = "Auto Crater", group = "Iterative Opmode")
+public class AutoCrater {
 
     boolean hasRun = false;
 
-    @Override
+   /* @Override
     public void init() {
         Auto8088.init(hardwareMap);
     }
@@ -26,5 +26,5 @@ public class AutoCrater extends OpMode {
     @Override
     public void stop(){
         Mech.opModeIsactive = false;
-    }
+    }*/
 }

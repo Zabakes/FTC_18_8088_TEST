@@ -40,6 +40,7 @@ public abstract class Mech implements Runnable {
      */
     public abstract void init(HardwareMap hardwareMap);
 
+    public  abstract String name();
 
     /**
      *

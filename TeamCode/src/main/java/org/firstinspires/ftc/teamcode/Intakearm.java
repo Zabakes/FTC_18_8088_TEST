@@ -13,15 +13,11 @@ public class Intakearm extends Mech {//a mechanism intake arm
 
     private DcMotor intake;
     private ExpansionHubMotor pivot;
-    private DigitalChannel upperLimitSwitch;
-    private DigitalChannel lowerLimitSwitch;
-    private Double MOTOR_STALL_CURRENT = 11500.0;
+    private static double MOTOR_STALL_CURRENT = 100.0;
 
     boolean isUp = true;
     boolean isDown = false;
 
-    public Intakearm() {
-    }//constructor for intake arm
 
     /**
      * see init in mech
@@ -38,6 +34,13 @@ public class Intakearm extends Mech {//a mechanism intake arm
 
         intake = hardwareMap.get(DcMotor.class, "Intake Motor");//get the intake motor from the passed the copy of the hardware map
         pivot = (ExpansionHubMotor)hardwareMap.get(DcMotor.class, "Pivot Intake");//get the pivot motor on the intake from the passed the copy of the hardware map
+
+        pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    @Override
+    public String name() {
+        return "intake";
     }
 
     @Override
@@ -54,7 +57,6 @@ public class Intakearm extends Mech {//a mechanism intake arm
                 intake.setPower(-gamepad.left_trigger);//retracts the intake at a power determined by the left trigger
             }
         }
-
         }
 
 
@@ -64,11 +66,11 @@ public class Intakearm extends Mech {//a mechanism intake arm
             isUp = false;
 
             do{
-                pivot.setPower(-.75);
+                pivot.setPower(1);
                 if(piviotTimeout(time)){
                     return;
                 }
-            }while(pivot.getCurrentDraw() < MOTOR_STALL_CURRENT && opModeIsactive);
+            }while(pivot.getCurrentDraw() < MOTOR_STALL_CURRENT && opModeIsactive && !isDown);
 
             isDown = true;
             pivot.setPower(0);//once either the limit switch is triggered or the action has timed out turn off the motor
@@ -80,11 +82,11 @@ public class Intakearm extends Mech {//a mechanism intake arm
             isDown = false;
             
             do{
-                pivot.setPower(.75);
+                pivot.setPower(-1);
                 if(piviotTimeout(time)){
                     return;
                 }
-            }while(pivot.getCurrentDraw() < MOTOR_STALL_CURRENT && opModeIsactive);
+            }while(pivot.getCurrentDraw() < MOTOR_STALL_CURRENT && opModeIsactive && !isUp);
 
             isUp = true;
             pivot.setPower(0);//once either the limit switch is triggered or the action has timed out turn off the motor
