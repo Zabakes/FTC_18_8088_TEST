@@ -13,7 +13,7 @@ public class EncoderThread implements Runnable {
     private double power;
     private double TICKS_PER_REV;
     private double radius = 0;
-    Thread t = new Thread(this);
+    Thread t = new Thread(this, "encoder Thread");
 
     /**
      * @param motor this is the motor that the encoder is attached to
@@ -23,7 +23,7 @@ public class EncoderThread implements Runnable {
         this.motor = motor;
         DcMotor.RunMode mode = motor.getMode();
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        TICKS_PER_REV = 7 * gearReduction;
+        TICKS_PER_REV = 28 * gearReduction;
         motor.setMode(mode);
     }
 
@@ -137,11 +137,15 @@ public class EncoderThread implements Runnable {
     }
 
     public void start(){
-       /* try{
-            t.start();
-        }catch (Exception e){
+       if(false){
+           try{
+               t.start();
+           }catch (Exception e){
+               run();
+               Teleop8088.telemtryAddData(e.toString());
+           }
+       }
+       //run();
 
-        }*/
-       run();
     }
 }
