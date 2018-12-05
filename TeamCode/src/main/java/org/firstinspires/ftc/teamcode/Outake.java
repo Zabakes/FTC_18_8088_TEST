@@ -89,18 +89,18 @@ public class Outake extends Mech {
      * lower the slide
      */
     public void lower() {
-            raiseMotorEncoder.runToPosLinear(1, 0);
+            raiseMotorEncoder.runToPosLinear(1, 1);
     }
 
     /**
      * raise the slide
      */
     public void raise() {
-            raiseMotorEncoder.runToPosLinear(1, MAX_LINEAR_TRAVEL);
+        raiseMotorEncoder.runToPosLinear(1, MAX_LINEAR_TRAVEL);
     }
 
     public void unClimb(){
-            raiseMotorEncoder.runToPosLinear(1, CLIMB_HEIGHT+3);
+        raiseMotorEncoder.runToPosLinear(1, CLIMB_HEIGHT+3);
     }
 
     @Override

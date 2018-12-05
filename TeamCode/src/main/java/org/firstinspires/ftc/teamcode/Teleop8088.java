@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.openftc.revextensions2.RevExtensions2;
 
-@TeleOp(name = "Teleop8088", group = "Iterative Opmode")
+@TeleOp(name = "Teleop8088Test", group = "Iterative Opmode")
 
 public class Teleop8088 extends OpMode {
 
@@ -33,7 +33,7 @@ public class Teleop8088 extends OpMode {
        Mech.opModeIsactive = true;
         for (Mech m : mechs) {//reads each mech in mechs and calls it's run method
             m.updateAndStart(gamepad1);//send a copy of the gamepad out to all the mechs(m) and run them with that gamepad
-            telemetry.addData(m.name(), m);
+            //telemetry.addData(m.name(), m);
             telemetry.update();
         }
     }

@@ -2,13 +2,14 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.openftc.revextensions2.ExpansionHubMotor;
+
 /**
  * Runs a DC motor to a given position in it's own thread other things can happen while the motor is running to that position
  */
 public class EncoderThread implements Runnable {
 
     DcMotor motor;
-
     private double targetPosition;
     private double power;
     private double TICKS_PER_REV;
@@ -23,7 +24,7 @@ public class EncoderThread implements Runnable {
         this.motor = motor;
         DcMotor.RunMode mode = motor.getMode();
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        TICKS_PER_REV = 28 * gearReduction;
+        TICKS_PER_REV = 7 * gearReduction;
         motor.setMode(mode);
     }
 
@@ -34,26 +35,28 @@ public class EncoderThread implements Runnable {
      */
     @Override
     public void run() {
+        try {
+            //record all the initial stuff
+            long t = System.currentTimeMillis();
+            double initialPos = motor.getCurrentPosition();
+            DcMotor.RunMode mode = motor.getMode();
 
-        //record all the initial stuff
-        long t = System.currentTimeMillis();
-        double initialPos = motor.getCurrentPosition();
-        DcMotor.RunMode mode = motor.getMode();
+            //run to the position
+            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motor.setTargetPosition((int) Math.round(targetPosition * (power / Math.abs(power))));
+            motor.setPower(power);
 
-        //run to the position
-        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motor.setTargetPosition((int) Math.round(targetPosition*(power/Math.abs(power))));
-        motor.setPower(power);
+            //wait to get to the position or timeout
+             while (motor.isBusy() && System.currentTimeMillis() < t + Math.abs(targetPosition - initialPos) * power && Mech.opModeIsactive) {
 
-        //wait to get to the position or timeout
-        while (motor.isBusy() && System.currentTimeMillis() < t + Math.abs(targetPosition - initialPos) * power && Mech.opModeIsactive) {
+             }
 
+            //turn off and set the mode back to the original
+            motor.setPower(0);
+            motor.setMode(mode);
+        }catch (Exception e){
+            Teleop8088.telemtryAddData(e.toString());
         }
-
-        //turn off and set the mode back to the original
-        motor.setPower(0);
-        motor.setMode(mode);
-
     }
 
     /**
@@ -61,8 +64,12 @@ public class EncoderThread implements Runnable {
      *
      * @param targetPosition target position in ticks
      */
-    public void setTargetPosition(int targetPosition) {
-        this.targetPosition = targetPosition;
+    public boolean setTargetPosition(double targetPosition) {
+        if(!t.isAlive()) {
+            this.targetPosition = (int) Math.round(targetPosition);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -70,8 +77,12 @@ public class EncoderThread implements Runnable {
      *
      * @param power power to set
      */
-    public void setPower(int power) {
-        this.power = power;
+    public boolean setPower(double power) {
+        if (!t.isAlive()){
+            this.power = power;
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -81,11 +92,13 @@ public class EncoderThread implements Runnable {
      * @param power power to run at
      * @param targetposition position to run to
      */
-    public void runToPosition(int power, int targetposition) {
+    public boolean runToPosition(double power, int targetposition) {
         //run to a  position
-        this.power = power;
-        this.targetPosition = targetposition;
-       start();
+        if (setPower(power) && setTargetPosition(targetposition)){
+            start();
+            return true;
+        }else
+            return false;
     }
 
 
@@ -98,11 +111,14 @@ public class EncoderThread implements Runnable {
      * @param radius radius of the wheel or pulley attached to the wheel
      */
     @Deprecated
-    public void runToPosLinear(double power, double targetPosition, double radius) {
+    public boolean runToPosLinear(double power, double targetPosition, double radius) {
         //run to a linear pos based on a new radius
-        this.power = power;
-        this.targetPosition = (targetPosition)/((2 * Math.PI * radius)/TICKS_PER_REV);
-        start();
+        if (setPower(power) && setTargetPosition((targetPosition)/((2 * Math.PI * radius)/TICKS_PER_REV))) {
+            start();
+            return true;
+        }else
+            return false;
+
     }
     /**
      *
@@ -111,12 +127,13 @@ public class EncoderThread implements Runnable {
      * @param power sets the power to run a motor at
      * @param targetPosition sets a linear position for the motor to run to
      */
-    public void runToPosLinear(double power, double targetPosition) {
-
+    public boolean runToPosLinear(double power, double targetPosition) {
         //run to a linear position based on a set radius
-        this.power = power;
-        this.targetPosition = (targetPosition)/((2 * Math.PI * radius)/TICKS_PER_REV);
-        start();
+        if (setPower(power) && setTargetPosition((targetPosition)/((2 * Math.PI * radius)/TICKS_PER_REV))) {
+            start();
+            return true;
+        }else return false;
+
     }
 
     /**
@@ -124,7 +141,13 @@ public class EncoderThread implements Runnable {
      */
     public double getLinearPos() {
         //get a linear pos based on a radius
-        return (motor.getCurrentPosition())/((2 * Math.PI * radius)/TICKS_PER_REV);
+        try{
+            return (motor.getCurrentPosition())/((2 * Math.PI * radius)/TICKS_PER_REV);
+         }catch (Exception e) {
+            Teleop8088.telemtryAddData(e.toString());
+            return (targetPosition);
+        }
+
     }
 
     /**
@@ -137,15 +160,11 @@ public class EncoderThread implements Runnable {
     }
 
     public void start(){
-       if(false){
            try{
                t.start();
            }catch (Exception e){
-               run();
+               //run();
                Teleop8088.telemtryAddData(e.toString());
            }
-       }
-       //run();
-
     }
 }
