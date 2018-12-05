@@ -11,7 +11,7 @@ public class Intakearm extends Mech {//a mechanism intake arm
 
     private DcMotor intake;
     private ExpansionHubMotor pivot;
-    private static double MOTOR_STALL_CURRENT = 100.0;
+    private static double MOTOR_STALL_CURRENT = 1150.0;//TODO set this it is NOT final it will break the robot!!!!!!!
 
     boolean isUp = true;
     boolean isDown = false;
@@ -65,6 +65,7 @@ public class Intakearm extends Mech {//a mechanism intake arm
 
             do{
                 pivot.setPower(1);
+                Teleop8088.telemtryAddData(Double.toString(pivot.getCurrentDraw()));
                 if(piviotTimeout(time)){
                     return;
                 }
@@ -81,6 +82,7 @@ public class Intakearm extends Mech {//a mechanism intake arm
             
             do{
                 pivot.setPower(-1);
+                Teleop8088.telemtryAddData(Double.toString(pivot.getCurrentDraw()));
                 if(piviotTimeout(time)){
                     return;
                 }

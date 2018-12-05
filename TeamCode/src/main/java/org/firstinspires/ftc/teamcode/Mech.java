@@ -49,12 +49,13 @@ public abstract class Mech implements Runnable {
      * @param gamepad gamepad from opmode to run based on
      */
     public void updateAndStart(Gamepad gamepad) {// update and start method for all mechs updates the gamepad and starts run
-        this.gamepad = gamepad;//update gamepad
         if (isThread){//if this mech uses it's own thread.
-            if (!thread.isAlive()) {//check to make sure no thread of this mech is running already.
+            if (!thread.isAlive()){//check to make sure no thread of this mech is running already.
+                this.gamepad = gamepad;//update gamepad
                 thread.start();//start the thread with this mech is a runnable.
             }
         } else {
+            this.gamepad = gamepad;
             this.run();//otherwise just call the run method normally
         }
     }
