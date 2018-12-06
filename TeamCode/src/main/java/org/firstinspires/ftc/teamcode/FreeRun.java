@@ -12,7 +12,7 @@ import org.openftc.revextensions2.RevExtensions2;
 
 public class FreeRun extends OpMode {
 
-    public static final double MAX_SERVO_POSITION = 250.0/280.0;//position of the pivot when up scaled from 0-1
+    public static final double MAX_SERVO_POSITION = -250.0/280.0;//position of the pivot when up scaled from 0-1
     public static final double HOME_SERVO_POSITION = 0/270;//position of the pivot when down scaled from 0-1
     private ElapsedTime runtime = new ElapsedTime();
     public static Mech[] mechs = new Mech[]{new Chassis(16,16) , new Intakearm()};//create an array of the abstract object mech containing all mechanisms on the robot this is possible because all the mechanisms extend the mechs class

@@ -39,7 +39,7 @@ public class Teleop8088 extends OpMode {
     }
 
     public static void telemtryAddData(String string){
-        telemtryAddData(string);
+
     }
 
     @Override

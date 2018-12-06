@@ -14,8 +14,8 @@ public class Outake extends Mech {
 
     //TODO set these
     public static final double MAX_LINEAR_TRAVEL = 15.75;//max linear travel in inches of the slide
-    public static final double MAX_SERVO_POSITION = 250.0/280.0;//position of the pivot when up scaled from 0-1
-    public static final double HOME_SERVO_POSITION = 0/270;//position of the pivot when down scaled from 0-1
+    public static final double MAX_SERVO_POSITION = -250.0/280.0;//position of the pivot when up scaled from 0-1
+    public static final double HOME_SERVO_POSITION = -3.0/270.0;//position of the pivot when down scaled from 0-1
     public static final double WHEEL_RADIUS = 1.325;//radius of the wheel the string is wrapped around
     public static final double CLIMB_HEIGHT =  10;
 
@@ -89,7 +89,7 @@ public class Outake extends Mech {
      * lower the slide
      */
     public void lower() {
-            raiseMotorEncoder.runToPosLinear(1, 1);
+            raiseMotorEncoder.runToPosLinear(1, 0);
     }
 
     /**
