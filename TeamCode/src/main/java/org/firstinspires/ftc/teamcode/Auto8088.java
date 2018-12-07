@@ -22,7 +22,7 @@ public class Auto8088 {
     private static Outake outake = new Outake();
 
 
-    public static final Double BACKUP_DISTANCE = 1.0;
+    public static final Double BACKUP_DISTANCE = 1.0;//TODO set these
     public static final Double TO_GOLD_DEGREES = 5.0;
     public static Double TO_CRATER_DEGREES = 10.0;
     public static Double TO_CRATER_DISTANCE = 10.0;
@@ -38,7 +38,7 @@ public class Auto8088 {
     public static void runOpMode(boolean isNearCrater) {
 
         outake.unClimb();
-        chassis.go(1, -BACKUP_DISTANCE);
+        chassis.go(1, BACKUP_DISTANCE);
         outake.lower();
 
         float turnPower;
@@ -61,7 +61,7 @@ public class Auto8088 {
         }
 
         chassis.turn(turnPower, TO_GOLD_DEGREES);
-        chassis.go(1,goDistance);
+        chassis.go(1, goDistance);
 
         if(isNearCrater){
             chassis.go(1,4);
@@ -107,12 +107,14 @@ public class Auto8088 {
             e.printStackTrace();
         }
 
-        int silverAvgX = 0;//sum of all x coordinates belonging to pixels with a red value above the threshold used for averaging
-        int goldAvgX = 0;//sum of all x coordinates belonging to pixels with a blue value above the threshold used for averaging
-        int silverNum = 0;
-        int goldNum = 0;
+        goldPosition position = goldPosition.CENTER;
 
         if(frame != null) {
+
+            int silverAvgX = 0;//sum of all x coordinates belonging to pixels with a red value above the threshold used for averaging
+            int goldAvgX = 0;//sum of all x coordinates belonging to pixels with a blue value above the threshold used for averaging
+            int silverNum = 0;
+            int goldNum = 0;
 
             Bitmap pic = vuforia.convertFrameToBitmap(frame);
 
@@ -153,14 +155,12 @@ public class Auto8088 {
                 }
             }
 
-        }
+
 
         int tolerance = 10;
 
         int numGoldPixReq = 100;
         int numSilverPixReq = 200;
-
-        goldPosition position = goldPosition.CENTER;
 
         if(goldNum >= numGoldPixReq && silverNum >= numSilverPixReq) {
 
@@ -169,6 +169,7 @@ public class Auto8088 {
             } else if (goldAvgX - tolerance < silverAvgX) {
                 position = goldPosition.LEFT;
             }
+        }
         }
         return position;
         }

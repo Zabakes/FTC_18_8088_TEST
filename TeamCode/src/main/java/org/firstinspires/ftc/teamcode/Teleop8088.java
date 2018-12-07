@@ -13,7 +13,8 @@ import org.openftc.revextensions2.RevExtensions2;
 public class Teleop8088 extends OpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
-    public static Mech[] mechs = new Mech[]{new Outake()};//create an array of the abstract object mech containing all mechanisms on the robot this is possible because all the mechanisms extend the mechs class
+    static String toPrint;
+    public static Mech[] mechs = new Mech[]{new Outake(), new Intakearm(), new Chassis(16, 16)};//create an array of the abstract object mech containing all mechanisms on the robot this is possible because all the mechanisms extend the mechs class
 
     @Override
     public void init() {
@@ -30,16 +31,23 @@ public class Teleop8088 extends OpMode {
 
     @Override
     public void loop() {
+
        Mech.opModeIsactive = true;
         for (Mech m : mechs) {//reads each mech in mechs and calls it's run method
             m.updateAndStart(gamepad1);//send a copy of the gamepad out to all the mechs(m) and run them with that gamepad
-            //telemetry.addData(m.name(), m);
-            telemetry.update();
+            telemetry.addData(m.name(), m);
+
         }
+
+        telemetry.addData(toPrint, this);
+        toPrint = "";
+        telemetry.update();
+        telemetry.clearAll();
+
     }
 
     public static void telemtryAddData(String string){
-
+        toPrint = toPrint + string;
     }
 
     @Override
