@@ -24,7 +24,7 @@ public class EncoderThread implements Runnable {
         this.motor = motor;
         DcMotor.RunMode mode = motor.getMode();
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        TICKS_PER_REV = 7 * gearReduction;
+        TICKS_PER_REV = 28 * gearReduction;
         motor.setMode(mode);
     }
 
@@ -37,17 +37,19 @@ public class EncoderThread implements Runnable {
     public void run() {
         try {
             //record all the initial stuff
+
+            Teleop8088.telemtryAddData("target position" + targetPosition + " power" + power);
             long t = System.currentTimeMillis();
             double initialPos = motor.getCurrentPosition();
             DcMotor.RunMode mode = motor.getMode();
 
             //run to the position
             motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            motor.setTargetPosition((int) Math.round(targetPosition * (power / Math.abs(power))));
+            motor.setTargetPosition((int) (Math.round(targetPosition)));
             motor.setPower(power);
 
             //wait to get to the position or timeout
-             while (motor.isBusy() && System.currentTimeMillis() < t + Math.abs(targetPosition - initialPos) * power && Mech.opModeIsactive) {
+             while (motor.isBusy() && System.currentTimeMillis() < t + Math.abs(targetPosition - initialPos)*2/power && Mech.opModeIsactive) {
 
              }
 
@@ -110,7 +112,6 @@ public class EncoderThread implements Runnable {
      * @param targetPosition sets a linear position for the motor to run to
      * @param radius radius of the wheel or pulley attached to the wheel
      */
-    @Deprecated
     public boolean runToPosLinear(double power, double targetPosition, double radius) {
         //run to a linear pos based on a new radius
         if (setPower(power) && setTargetPosition((targetPosition)/((2 * Math.PI * radius)/TICKS_PER_REV))) {
@@ -161,9 +162,10 @@ public class EncoderThread implements Runnable {
 
     public void start(){
            try{
-               t.start();
+               //t.start();
+               run();
            }catch (Exception e){
-               //run();
+               run();
                Teleop8088.telemtryAddData(e.toString());
            }
     }

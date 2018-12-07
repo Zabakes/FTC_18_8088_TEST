@@ -93,22 +93,71 @@ public class Chassis extends Mech {
     }
 
    public void go(float power , double distance){
-            for (EncoderThread motor : encoders) {
-                if(opModeIsactive) {
-                motor.runToPosLinear(power, distance);
-            }
-        }
+
+        DcMotor.RunMode[] mode = new DcMotor.RunMode[motors.length];
+        int i = 0;
+
+       for (DcMotor m: motors) {
+           mode[i] = m.getMode();
+           m.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+           m.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+           m.setTargetPosition((int)distance);
+           m.setPower(power);
+           i++;
+       }
+
+       while (!(motors[1].isBusy() ||motors[2].isBusy() ||motors[3].isBusy() ||motors[4].isBusy()) && opModeIsactive){
+
+       }
+
+       i = 0;
+
+       for (DcMotor m: motors) {
+           m.setPower(power);
+           m.setMode(mode[i]);
+           i++;
+       }
+
    }
 
    public void turn(float power, double degrees){
 
         if (opModeIsactive) {
-            double wheelCircleCircumfrence = 2 * Math.PI * Math.sqrt(Math.pow(width / 2, 2) + Math.pow(depth / 2, 2));
+
+            DcMotor.RunMode[] mode = new DcMotor.RunMode[motors.length];
+            int i = 0;
+
+            for (DcMotor m : motors) {
+                mode[i] = m.getMode();
+                m.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                m.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                i++;
+            }
+
+            double wheelCircleCircumfrence = Math.PI *2*Math.sqrt(Math.pow(width / 2, 2) + Math.pow(depth / 2, 2));
             double distToTurn = wheelCircleCircumfrence * 360 / degrees;
-            encoders[1].runToPosLinear(power, distToTurn);
-            encoders[2].runToPosLinear(-power, distToTurn);
-            encoders[3].runToPosLinear(power, distToTurn);
-            encoders[4].runToPosLinear(-power, distToTurn);
+            motors[1].setTargetPosition((int)distToTurn);
+            motors[2].setTargetPosition((int)-distToTurn);
+            motors[3].setTargetPosition((int)distToTurn);
+            motors[4].setTargetPosition((int)-distToTurn);
+
+            for (DcMotor m: motors) {
+                m.setPower(power);
+            }
+
+            while (!(motors[1].isBusy() || motors[2].isBusy() || motors[3].isBusy() || motors[4].isBusy()) && opModeIsactive){
+
+            }
+
+            i = 0;
+
+            for (DcMotor m: motors) {
+
+                m.setPower(power);
+                m.setMode(mode[i]);
+                i++;
+            }
+
         }
    }
 }

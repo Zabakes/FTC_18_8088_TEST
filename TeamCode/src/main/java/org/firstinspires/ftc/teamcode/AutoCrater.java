@@ -2,29 +2,17 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-//@Autonomous(name = "Auto Crater", group = "Iterative Opmode")
-public class AutoCrater {
+@Autonomous(name = "Auto Crater", group = "Iterative Opmode")
+public class AutoCrater extends LinearOpMode{
 
-    boolean hasRun = false;
-
-   /* @Override
-    public void init() {
+    @Override
+    public void runOpMode(){
         Auto8088.init(hardwareMap);
-    }
-
-    @Override
-    public void loop() {
+        waitForStart();
         Mech.opModeIsactive = true;
-        if(!hasRun) {
-            Auto8088.runOpMode(true);
-            hasRun = true;
-        }
+        Auto8088.runOpMode(false);
+        Mech.opModeIsactive = false;
     }
 
-    @Override
-    public void stop(){
-        Mech.opModeIsactive = false;
-    }*/
 }

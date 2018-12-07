@@ -10,6 +10,8 @@ public class AutoDepot extends LinearOpMode {
     public void runOpMode(){
         Auto8088.init(hardwareMap);
         waitForStart();
+        Mech.opModeIsactive = true;
         Auto8088.runOpMode(false);
+        Mech.opModeIsactive = false;
     }
 }

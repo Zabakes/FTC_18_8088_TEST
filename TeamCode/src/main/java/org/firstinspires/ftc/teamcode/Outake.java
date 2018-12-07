@@ -55,6 +55,7 @@ public class Outake extends Mech {
         if (gamepad.b) {
             climb();
         }
+
     }
     /**
      * go to climb height then back down
@@ -89,14 +90,26 @@ public class Outake extends Mech {
      * lower the slide
      */
     public void lower() {
-            raiseMotorEncoder.runToPosLinear(1, 0);
+           /* if(!raiseMotorEncoder.t.isAlive())
+                raiseMotorEncoder.runToPosLinear(-1, 0);*/
+            Teleop8088.telemtryAddData("go down" + raiseMotorEncoder.getLinearPos() + "\n\n");
+
+            raiseMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            raiseMotor.setTargetPosition(0);
+            raiseMotor.setPower(1);
+            while (raiseMotor.isBusy()){
+
+            }
     }
 
     /**
      * raise the slide
      */
     public void raise() {
-        raiseMotorEncoder.runToPosLinear(1, MAX_LINEAR_TRAVEL);
+        if(!raiseMotorEncoder.t.isAlive())
+            raiseMotorEncoder.runToPosLinear(1, MAX_LINEAR_TRAVEL);
+        Teleop8088.telemtryAddData("go up");
     }
 
     public void unClimb(){
