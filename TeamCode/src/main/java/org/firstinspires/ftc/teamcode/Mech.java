@@ -16,7 +16,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public abstract class Mech implements Runnable {
 
-    static boolean opModeIsactive = false;
+    static boolean opModeIsActive = false;
+    static boolean opModeIsTeleOP;
 
     /**
      * set whether or not a given mech should run on it's own thread
@@ -37,7 +38,7 @@ public abstract class Mech implements Runnable {
      *
      * @param hardwareMap hardwaremap from the phone
      */
-    public abstract void init(HardwareMap hardwareMap);
+    public abstract void init(HardwareMap hardwareMap, Boolean opModeIsTeleOP);
 
     public  abstract String name();
 

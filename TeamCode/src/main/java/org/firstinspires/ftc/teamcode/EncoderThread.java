@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.openftc.revextensions2.ExpansionHubMotor;
-
 /**
  * Runs a DC motor to a given position in it's own thread other things can happen while the motor is running to that position
  */
@@ -35,10 +33,8 @@ public class EncoderThread implements Runnable {
      */
     @Override
     public void run() {
-        try {
             //record all the initial stuff
 
-            Teleop8088.telemtryAddData("target position" + targetPosition + " power" + power);
             long t = System.currentTimeMillis();
             double initialPos = motor.getCurrentPosition();
             DcMotor.RunMode mode = motor.getMode();
@@ -49,16 +45,13 @@ public class EncoderThread implements Runnable {
             motor.setPower(power);
 
             //wait to get to the position or timeout
-             while (motor.isBusy() && System.currentTimeMillis() < t + Math.abs(targetPosition - initialPos)*2/power && Mech.opModeIsactive) {
+             while (motor.isBusy() && System.currentTimeMillis() < t + Math.abs(targetPosition - initialPos)*2/power && Mech.opModeIsActive) {
 
              }
 
             //turn off and set the mode back to the original
             motor.setPower(0);
             motor.setMode(mode);
-        }catch (Exception e){
-            Teleop8088.telemtryAddData(e.toString());
-        }
     }
 
     /**
@@ -145,7 +138,6 @@ public class EncoderThread implements Runnable {
         try{
             return (motor.getCurrentPosition())/((2 * Math.PI * radius)/TICKS_PER_REV);
          }catch (Exception e) {
-            Teleop8088.telemtryAddData(e.toString());
             return (targetPosition);
         }
 
@@ -162,11 +154,9 @@ public class EncoderThread implements Runnable {
 
     public void start(){
            try{
-               //t.start();
-               run();
+               t.start();
            }catch (Exception e){
                run();
-               Teleop8088.telemtryAddData(e.toString());
            }
     }
 }
